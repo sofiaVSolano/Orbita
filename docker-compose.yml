@@ -1,0 +1,140 @@
+# ─────────────────────────────────────────────
+# ORBITA - Sistema Multi-Agente de IA
+# Docker Compose Unificado - Configuración Principal
+# ─────────────────────────────────────────────
+
+version: '3.8'
+
+services:
+  # ─────────────────────────────────────────────
+  # Backend API - Sistema Multi-Agente FastAPI
+  # ─────────────────────────────────────────────
+  orbita-backend:
+    build: 
+      context: ./orbita_backend
+      dockerfile: Dockerfile
+    container_name: orbita-backend
+    restart: unless-stopped
+    ports:
+      - "8000:8000"
+    environment:
+      - ENVIRONMENT=production
+      - DEBUG=false
+    env_file:
+      - ./orbita_backend/.env
+    volumes:
+      - ./orbita_backend/logs:/app/logs
+      - ./orbita_backend:/app  # Hot reload en desarrollo
+    networks:
+      - orbita-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    depends_on:
+      - redis
+    labels:
+      - "com.orbita.service=backend"
+      - "com.orbita.version=1.0.0"
+
+  # ─────────────────────────────────────────────
+  # Frontend React + Nginx
+  # ─────────────────────────────────────────────
+  orbita-frontend:
+    build:
+      context: ./orbita_frontend
+      dockerfile: Dockerfile
+    container_name: orbita-frontend
+    restart: unless-stopped
+    ports:
+      - "3000:80"  # Nginx sirve en puerto 80
+    environment:
+      - NODE_ENV=production
+      - VITE_API_URL=http://localhost:8000  # URL del backend
+    volumes:
+      - ./orbita_frontend/nginx.conf:/etc/nginx/conf.d/default.conf:ro
+    networks:
+      - orbita-network
+    healthcheck:
+      test: ["CMD", "wget", "-qO-", "http://localhost:80/health"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
+    depends_on:
+      - orbita-backend
+    labels:
+      - "com.orbita.service=frontend"
+      - "com.orbita.version=1.0.0"
+
+  # ─────────────────────────────────────────────
+  # Redis Cache - Optimización y sesiones
+  # ─────────────────────────────────────────────
+  redis:
+    image: redis:7-alpine
+    container_name: orbita-redis
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis-data:/data
+      - ./orbita_backend/redis.conf:/usr/local/etc/redis/redis.conf:ro
+    command: redis-server /usr/local/etc/redis/redis.conf
+    networks:
+      - orbita-network
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 30s
+      timeout: 3s
+      retries: 3
+    labels:
+      - "com.orbita.service=cache"
+
+  # ─────────────────────────────────────────────
+  # Nginx Proxy (Opcional - para producción)
+  # ─────────────────────────────────────────────
+  nginx-proxy:
+    image: nginx:alpine
+    container_name: orbita-proxy
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./nginx/ssl:/etc/nginx/ssl:ro
+    networks:
+      - orbita-network
+    depends_on:
+      - orbita-backend
+      - orbita-frontend
+    labels:
+      - "com.orbita.service=proxy"
+    profiles:
+      - production  # Solo se ejecuta con --profile production
+
+# ─────────────────────────────────────────────
+# Redes y Volúmenes
+# ─────────────────────────────────────────────
+networks:
+  orbita-network:
+    driver: bridge
+    labels:
+      - "com.orbita.network=main"
+
+volumes:
+  redis-data:
+    driver: local
+    labels:
+      - "com.orbita.volume=redis-cache"
+
+# ─────────────────────────────────────────────
+# Configuraciones de desarrollo vs producción
+# ─────────────────────────────────────────────
+# Uso:
+# Desarrollo: docker-compose up
+# Producción: docker-compose --profile production up -d
+# Solo backend: docker-compose up orbita-backend redis
+# Solo frontend: docker-compose up orbita-frontend
