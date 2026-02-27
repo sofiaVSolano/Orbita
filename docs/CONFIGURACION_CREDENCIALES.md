@@ -20,15 +20,15 @@
 
 #### Supabase
 ```env
-SUPABASE_URL=https://xiblghevwgzuhytcqpyg.supabase.co
-SUPABASE_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+SUPABASE_URL=https://your-project.supabase.co
+SUPABASE_KEY=your-supabase-anon-key-here
 ```
 - **Base de datos PostgreSQL**
-- URL: https://xiblghevwgzuhytcqpyg.supabase.co
+- URL: https://your-project.supabase.co
 
 #### Groq AI API
 ```env
-GROQ_API_KEY=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
+GROQ_API_KEY=your-groq-api-key-here
 ```
 - **6 Modelos configurados por agente:**
   - ORCHESTRATOR: `llama-3.3-70b-versatile`
