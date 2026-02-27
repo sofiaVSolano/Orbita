@@ -1,0 +1,44 @@
+# ── Dependencias ──────────────────────────────────────────────
+node_modules/
+
+# ── Build / dist ──────────────────────────────────────────────
+dist/
+dist-ssr/
+build/
+
+# ── Variables de entorno (credenciales) ───────────────────────
+.env
+.env.local
+.env.*.local
+.env.development
+.env.production
+.env.staging
+# .env.example  →  sí se sube (sirve como plantilla sin secretos)
+
+# ── Logs ──────────────────────────────────────────────────────
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+# ── Cache / temporales ────────────────────────────────────────
+.cache/
+.parcel-cache/
+.vite/
+*.tsbuildinfo
+
+# ── Editor / OS ───────────────────────────────────────────────
+.DS_Store
+Thumbs.db
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+.vscode/*
+!.vscode/extensions.json
+
+# ── Lock files alternativos (elige uno) ───────────────────────
+yarn.lock
+pnpm-lock.yaml
