@@ -1,19 +1,27 @@
-# Cliente para Groq API
-# [CRITERIO 3] — Uso real de IA con modelos de Groq
+# Cliente para Groq API y OpenAI API
+# [CRITERIO 3] — Uso real de IA con modelos de Groq y OpenAI
 
 import groq
+from openai import OpenAI
 from typing import Dict, Any, List, Optional
-from config import get_settings
+from config import get_settings, USE_OPENAI_FOR_ORCHESTRATOR, OPENAI_MODEL_ORCHESTRATOR
 
 class GroqClient:
     """
-    Cliente para interactuar con Groq API.
+    Cliente para interactuar con Groq API y OpenAI API.
     Maneja diferentes modelos para diferentes agentes según las especificaciones.
     """
     
     def __init__(self):
         settings = get_settings()
-        self.client = groq.Groq(api_key=settings["groq_api_key"])
+        self.groq_client = groq.Groq(api_key=settings["groq_api_key"])
+        
+        # Inicializar cliente de OpenAI si está configurado
+        if settings.get("openai_api_key"):
+            self.openai_client = OpenAI(api_key=settings["openai_api_key"])
+        else:
+            self.openai_client = None
+            
         self.models = {
             "orchestrator": "llama-3.3-70b-versatile",
             "captador": "gemma2-9b-it", 
@@ -35,7 +43,7 @@ class GroqClient:
         system_message: Optional[str] = None
     ) -> str:
         """
-        Genera una respuesta usando Groq API.
+        Genera una respuesta usando Groq API o OpenAI API según configuración.
         
         Args:
             prompt: El prompt del usuario
@@ -47,6 +55,13 @@ class GroqClient:
         Returns:
             Respuesta generada por el modelo
         """
+        # Usar OpenAI para orchestrator si está configurado
+        if agent_type == "orchestrator" and USE_OPENAI_FOR_ORCHESTRATOR and self.openai_client:
+            return await self._generate_openai_completion(
+                prompt, system_message, max_tokens, temperature
+            )
+        
+        # Usar Groq para otros agentes
         model = self.get_model_for_agent(agent_type)
         
         messages = []
@@ -62,7 +77,7 @@ class GroqClient:
         })
         
         try:
-            response = self.client.chat.completions.create(
+            response = self.groq_client.chat.completions.create(
                 model=model,
                 messages=messages,
                 max_tokens=max_tokens,
@@ -73,6 +88,42 @@ class GroqClient:
             
         except Exception as e:
             print(f"❌ Error en Groq API: {e}")
+            return "Lo siento, hay un problema técnico. Por favor intenta de nuevo."
+    
+    async def _generate_openai_completion(
+        self,
+        prompt: str,
+        system_message: Optional[str],
+        max_tokens: int,
+        temperature: float
+    ) -> str:
+        """
+        Genera una respuesta usando OpenAI API.
+        """
+        messages = []
+        if system_message:
+            messages.append({
+                "role": "system",
+                "content": system_message
+            })
+        
+        messages.append({
+            "role": "user",
+            "content": prompt
+        })
+        
+        try:
+            response = self.openai_client.chat.completions.create(
+                model=OPENAI_MODEL_ORCHESTRATOR,
+                messages=messages,
+                max_tokens=max_tokens,
+                temperature=temperature
+            )
+            
+            return response.choices[0].message.content
+            
+        except Exception as e:
+            print(f"❌ Error en OpenAI API: {e}")
             return "Lo siento, hay un problema técnico. Por favor intenta de nuevo."
 
 # Instancia global del cliente

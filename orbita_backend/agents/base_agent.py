@@ -109,7 +109,7 @@ class BaseAgent(ABC):
                 agent_type=self.agent_name,
                 system_message=system_msg,
                 temperature=0.7,
-                max_tokens=1000
+                max_tokens=300
             )
             
             # Calcular tiempo de procesamiento

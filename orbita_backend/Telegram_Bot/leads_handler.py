@@ -9,13 +9,18 @@ from datetime import datetime, timezone
 import json
 import os
 import tempfile
+import httpx
+import asyncio
 
-from database import get_db
+from database import get_db, create_cotizacion, update_lead_status
 from config import get_settings
 from agents.orchestrator import OrchestratorAgent
 from agents.captador import CaptadorAgent
 from agents.conversacional import ConversacionalAgent
+from agents.comunicacion import ComunicacionAgent
 from utils.groq_client import get_groq_client
+from utils.cotizacion_renderer import render_cotizacion_markdown
+from utils.quick_estimate import get_quick_estimator
 
 
 class LeadsBotHandler:
@@ -46,6 +51,10 @@ class LeadsBotHandler:
         self.orchestrator = OrchestratorAgent()
         self.captador = CaptadorAgent()
         self.conversacional = ConversacionalAgent()
+        self.comunicacion = ComunicacionAgent()
+        
+        # Estimador de precios rápido
+        self.quick_estimator = get_quick_estimator()
     
     # ─── ROUTER PRINCIPAL ──────────────────────────────────────
     
@@ -211,8 +220,9 @@ class LeadsBotHandler:
         Procesa el mensaje usando el sistema de agentes.
         
         1. Orquestador decide qué hacer
-        2. Captador extrae datos si es un lead nuevo
-        3. Conversacional genera la respuesta
+        2. Detecta automáticamente si el usuario está pidiendo un servicio
+        3. Si hay servicio detectado, genera estimado de precio
+        4. Genera botones apropiados basados en contexto
         """
         try:
             # Construir el input para el orquestador
@@ -239,16 +249,43 @@ class LeadsBotHandler:
                 "Gracias por tu mensaje. ¿En qué puedo ayudarte?"
             )
             
+            # ★ NUEVO: Detectar automáticamente servicios solicitados
+            servicio_detectado, confianza = self.quick_estimator.detectar_servicio(mensaje)
+            estimado = None
+            respuesta_con_estimado = respuesta
+            
+            if servicio_detectado and confianza > 0.5:
+                # Generar estimado rápido
+                estimado = self.quick_estimator.generar_estimado(
+                    servicio=servicio_detectado,
+                    detalles_adicionales=mensaje,
+                    nivel_complejidad=self._detectar_complejidad(mensaje)
+                )
+                
+                if estimado:
+                    # Agregar el estimado a la respuesta
+                    mensaje_estimado = self.quick_estimator.formatear_estimado(estimado)
+                    respuesta_con_estimado = f"{respuesta}\n\n{mensaje_estimado}"
+                    
+                    print(f"✅ Servicio detectado: {estimado['nombre_servicio']} (confianza: {confianza:.2%})")
+            
             # Determinar si necesita botones especiales
             botones = await self._generar_botones_si_necesario(
-                mensaje, lead_id, resultado_orchestrator
+                mensaje, lead_id, resultado_orchestrator, 
+                servicio_detectado=servicio_detectado,
+                estimado=estimado
             )
             
             return {
-                "respuesta": respuesta,
+                "respuesta": respuesta_con_estimado,
                 "botones": botones,
                 "agente": resultado_orchestrator.get("agent", "orchestrator"),
-                "metadatos": resultado_orchestrator
+                "metadatos": {
+                    **resultado_orchestrator,
+                    "servicio_detectado": servicio_detectado,
+                    "confianza_deteccion": confianza,
+                    "estimado": estimado
+                }
             }
             
         except Exception as e:
@@ -263,6 +300,20 @@ class LeadsBotHandler:
                 "agente": "fallback",
                 "metadatos": {"error": str(e)}
             }
+    
+    def _detectar_complejidad(self, mensaje: str) -> str:
+        """Detecta el nivel de complejidad basado en el mensaje."""
+        mensaje_lower = mensaje.lower()
+        
+        # Palabras de baja complejidad
+        if any(w in mensaje_lower for w in ["simple", "básico", "sencillo", "pequeño"]):
+            return "simple"
+        
+        # Palabras de alta complejidad
+        if any(w in mensaje_lower for w in ["complejo", "avanzado", "múltiples", "integraciones", "customizado"]):
+            return "complejo"
+        
+        return "standard"
     
     # ─── COMANDOS ──────────────────────────────────────────────
     
@@ -323,35 +374,179 @@ class LeadsBotHandler:
     
     async def _handle_cotizacion_callback(self, data: str, chat_id: str, bot: Bot):
         """Maneja solicitudes de cotización desde botones."""
-        # data = "cotizacion_aceptar_<lead_id>" o "cotizacion_rechazar_<lead_id>"
+        # Formatos cortos para cumplir límite Telegram (64 chars):
+        # - "cot_int_<lead_id>" → cotización interes (NUEVO)
+        # - "cot_env_<lead_id>" → cotización enviar (NUEVO)
+        # - "cotizacion_aceptar_<lead_id>" → aceptar (legacy)
+        # - "cotizacion_rechazar_<lead_id>" → rechazar (legacy)
+        
         partes = data.split("_")
-        if len(partes) < 3:
+        if len(partes) < 2:
             return
         
-        accion = partes[1]  # "aceptar" o "rechazar"
-        lead_id = partes[2]
+        accion_corta = "_".join(partes[0:2])  # "cot_int", "cot_env", "cotizacion_aceptar", etc.
         
-        if accion == "aceptar":
+        # Extraer lead_id (puede estar en diferentes posiciones)
+        lead_id = None
+        if len(partes) >= 3 and partes[0].startswith("cot"):  # Formato corto
+            try:
+                lead_id = int(partes[2])
+            except (ValueError, IndexError):
+                pass
+        elif len(partes) >= 3:  # Formato legacy
+            try:
+                lead_id = int(partes[2])
+            except (ValueError, IndexError):
+                pass
+        
+        if not lead_id:
+            return
+        
+        # ★ NUEVO: Manejo del callback "cot_int" (cotización interes)
+        if accion_corta == "cot_int":
+            print(f"✅ Usuario interesado en cotización (lead {lead_id})")
+            
+            # Recuperar servicio guardado en BD
+            try:
+                lead_result = self.db.table("leads").select("interes").eq("id", lead_id).execute()
+                servicio = None
+                if lead_result.data:
+                    servicio = lead_result.data[0].get("interes")
+                
+                # Generar cotización automática
+                await self._generar_cotizacion_interes(
+                    lead_id=str(lead_id),
+                    servicio=servicio or "sitio_web",  # default
+                    chat_id=chat_id,
+                    bot=bot
+                )
+            except Exception as e:
+                print(f"❌ Error en cot_int: {e}")
+                await bot.send_message(
+                    chat_id=chat_id,
+                    text="Hubo un error procesando tu solicitud. Por favor intenta de nuevo."
+                )
+            return
+        
+        # ★ NUEVO: Manejo del callback "cot_env" (cotización enviar)
+        if accion_corta == "cot_env":
+            print(f"⭐ Usuario solicita enviar detalles (lead {lead_id})")
             await bot.send_message(
                 chat_id=chat_id,
                 text=(
-                    "¡Excelente! 🎉\n\n"
+                    "📧 ¿A qué correo quieres que envíe los detalles?\\n\\n"
+                    "Por favor proporciona tu correo electrónico."
+                )
+            )
+            return
+        
+        # Legacy: formatos antiguos
+        if "aceptar" in data:
+            await bot.send_message(
+                chat_id=chat_id,
+                text=(
+                    "¡Excelente! 🎉\\n\\n"
                     "¿Cuándo te gustaría que agendemos una reunión para revisar los detalles?"
                 ),
                 parse_mode=ParseMode.MARKDOWN
             )
-            # Actualizar status
             self.db.table("leads").update(
                 {"status": "cotizado"}
             ).eq("id", lead_id).execute()
-            
-        else:  # rechazar
+        
+        elif "rechazar" in data:
             await bot.send_message(
                 chat_id=chat_id,
                 text=(
                     "Entiendo. ¿Hay algo específico que no se ajusta a tus necesidades? "
                     "Puedo ajustar la propuesta."
                 )
+            )
+    
+    async def _generar_cotizacion_interes(
+        self,
+        lead_id: str,
+        servicio: str,
+        chat_id: str,
+        bot: Bot
+    ):
+        """
+        Genera una cotización cuando el usuario hace clic en "Me interesa"
+        basada en el servicio detectado automáticamente.
+        """
+        try:
+            # Mostra estado "escribiendo"
+            await bot.send_chat_action(chat_id=chat_id, action="typing")
+            
+            # Obtener lead del chat_id
+            lead = await self._get_or_create_lead(chat_id, None)
+            if not lead:
+                await bot.send_message(
+                    chat_id=chat_id,
+                    text="❌ No pude identificar tu información. Por favor intenta de nuevo."
+                )
+                return
+            
+            # Obtener datos del lead
+            lead_id_int = lead.get("id") or int(lead_id)
+            lead_result = self.db.table("leads").select("*").eq("id", lead_id_int).execute()
+            if not lead_result.data:
+                await bot.send_message(
+                    chat_id=chat_id,
+                    text="❌ No encontré tu información. Por favor intenta de nuevo."
+                )
+                return
+            
+            lead_data = lead_result.data[0]
+            
+            # Obtener información del servicio del quick_estimator
+            estimado = self.quick_estimator.generar_estimado(
+                servicio=servicio,
+                detalles_adicionales=""
+            )
+            
+            if not estimado:
+                await bot.send_message(
+                    chat_id=chat_id,
+                    text="❌ No pude procesar tu solicitud. Por favor intenta de nuevo."
+                )
+                return
+            
+            # Enviar estimado al usuario
+            mensaje_estimado = self.quick_estimator.formatear_estimado(estimado)
+            
+            await bot.send_message(
+                chat_id=chat_id,
+                text=mensaje_estimado,
+                parse_mode=ParseMode.MARKDOWN
+            )
+            
+            # Agregar botones de acciones siguientes
+            keyboard = InlineKeyboardMarkup([
+                [
+                    InlineKeyboardButton("✅ Aceptar estimado", callback_data=f"cotizacion_aceptar_{lead_id_int}"),
+                    InlineKeyboardButton("❌ Ajustar propuesta", callback_data=f"cotizacion_rechazar_{lead_id_int}")
+                ],
+                [
+                    InlineKeyboardButton("📅 Agendar reunión", callback_data=f"reunion_agendar_{lead_id_int}")
+                ]
+            ])
+            
+            await bot.send_message(
+                chat_id=chat_id,
+                text="¿Qué te gustaría hacer?",
+                reply_markup=keyboard
+            )
+            
+            # Actualizar status del lead
+            await update_lead_status(lead_id_int, "cotizado")
+            print(f"✅ Cotización rápida enviada a lead {lead_id_int}")
+            
+        except Exception as e:
+            print(f"❌ Error generando cotización de interés: {e}")
+            await bot.send_message(
+                chat_id=chat_id,
+                text="Hubo un problema. Un asesor te contactará pronto."
             )
     
     async def _handle_reunion_callback(self, data: str, chat_id: str, bot: Bot):
@@ -368,26 +563,181 @@ class LeadsBotHandler:
         )
     
     async def _handle_plan_callback(self, data: str, chat_id: str, message_id: int, bot: Bot):
-        """Maneja selección de planes."""
+        """
+        Maneja selección de planes y genera cotización automática.
+        [CRITERIO 5] - Cotizaciones automáticas generadas por IA
+        """
         # data = "plan_basico", "plan_profesional", "plan_enterprise"
         plan = data.replace("plan_", "")
         
         await bot.edit_message_text(
             chat_id=chat_id,
             message_id=message_id,
-            text=f"✅ Has seleccionado el plan *{plan.upper()}*.\n\nPreparando cotización...",
+            text=f"✅ Has seleccionado el plan *{plan.upper()}*.\n\nPreparando cotización con IA...",
             parse_mode=ParseMode.MARKDOWN
         )
         
-        # Aquí se podría llamar al agente para generar cotización automática
-        # Por ahora, mensaje simple
-        await bot.send_message(
-            chat_id=chat_id,
-            text=(
-                f"📄 Estoy preparando una cotización detallada del plan {plan}.\n\n"
-                f"Te la enviaré en unos momentos con toda la información."
+        # Mostrar estado de "escribiendo"
+        await bot.send_chat_action(chat_id=chat_id, action="typing")
+        
+        # Obtener lead del chat_id
+        lead = await self._get_or_create_lead(chat_id, None)
+        if not lead:
+            await bot.send_message(
+                chat_id=chat_id,
+                text="❌ No pude identificar tu información. Por favor intenta de nuevo."
             )
+            return
+        
+        lead_id = lead["id"]
+        
+        # Generar cotización y enviarla
+        await self._generar_cotizacion_y_enviar(
+            lead_id=lead_id,
+            plan=plan,
+            chat_id=chat_id,
+            bot=bot
         )
+    
+    async def _generar_cotizacion_y_enviar(
+        self,
+        lead_id: int,
+        plan: str,
+        chat_id: str,
+        bot: Bot
+    ):
+        """
+        Genera una cotización automática con IA y la envía al lead vía Telegram.
+        [CRITERIO 5] - Cotizaciones automáticas generadas por IA
+        """
+        try:
+            # Obtener datos del lead de la BD
+            lead_result = self.db.table("leads").select("*").eq("id", lead_id).execute()
+            if not lead_result.data:
+                await bot.send_message(
+                    chat_id=chat_id,
+                    text="❌ No encontré tu información. Por favor intenta de nuevo."
+                )
+                return
+            
+            lead_data = lead_result.data[0]
+            
+            # Mapear plan a descripción de servicio
+            plan_descriptions = {
+                "basico": "Plan Básico - Solución inicial",
+                "profesional": "Plan Profesional - Solución completa",
+                "enterprise": "Plan Enterprise - Solución personalizada"
+            }
+            
+            servicio = plan_descriptions.get(plan.lower(), f"Plan {plan}")
+            
+            # Generar cotización con el agente de comunicación
+            print(f"🤖 Generando cotización para lead {lead_id} - {servicio}")
+            
+            resultado_cotizacion = await self.comunicacion.generate_cotizacion(
+                lead_data=lead_data,
+                servicio_solicitado=servicio,
+                detalles_adicionales=f"Plan seleccionado: {plan}"
+            )
+            
+            if not resultado_cotizacion.get("success"):
+                await bot.send_message(
+                    chat_id=chat_id,
+                    text=resultado_cotizacion.get("fallback_message", 
+                        "Hubo un problema generando la cotización. Un asesor te contactará pronto.")
+                )
+                return
+            
+            # Guardar cotización en BD
+            cotizacion_data = resultado_cotizacion["cotizacion"]
+            cotizacion_data["empresa_id"] = 1  # ID default de empresa
+            cotizacion_data["user_id"] = 1     # ID default de usuario
+            
+            nueva_cotizacion = await create_cotizacion(cotizacion_data)
+            
+            if not nueva_cotizacion.get("id"):
+                print("❌ Error al guardar cotización en BD")
+                await bot.send_message(
+                    chat_id=chat_id,
+                    text="Hubo un problema guardando la cotización. Por favor intenta de nuevo."
+                )
+                return
+            
+            cotizacion_id = nueva_cotizacion.get("id")
+            
+            # Actualizar estado del lead a "cotizado"
+            await update_lead_status(lead_id, "cotizado")
+            print(f"✅ Lead {lead_id} actualizado a status 'cotizado'")
+            
+            # Renderizar cotización en Markdown
+            # Obtener datos de empresa (dummy para demo)
+            empresa_data = {
+                "nombre": "ORBITA",
+                "slogan": "Soluciones Inteligentes de IA",
+                "email": "contacto@orbita.ai",
+                "telefono": "+1 234 567 890",
+                "ciudad": "Virtual",
+                "pais": "Global"
+            }
+            
+            markdown_content = render_cotizacion_markdown(
+                cotizacion_data=nueva_cotizacion,
+                lead_data=lead_data,
+                empresa_data=empresa_data
+            )
+            
+            # Enviar cotización al usuario
+            print(f"📤 Enviando cotización a chat {chat_id}")
+            
+            # Dividir en mensajes si es muy largo
+            if len(markdown_content) > 4096:
+                # Telegram tiene límite de 4096 caracteres por mensaje
+                chunks = [markdown_content[i:i+4000] for i in range(0, len(markdown_content), 4000)]
+                for chunk in chunks:
+                    await bot.send_message(
+                        chat_id=chat_id,
+                        text=chunk,
+                        parse_mode=ParseMode.MARKDOWN
+                    )
+                    await asyncio.sleep(0.5)  # Pequeña pausa entre mensajes
+            else:
+                await bot.send_message(
+                    chat_id=chat_id,
+                    text=markdown_content,
+                    parse_mode=ParseMode.MARKDOWN
+                )
+            
+            # Enviar botones de acción
+            keyboard = [
+                [
+                    InlineKeyboardButton("✅ Aceptar", callback_data=f"cotizacion_aceptar_{lead_id}"),
+                    InlineKeyboardButton("❌ Rechazar", callback_data=f"cotizacion_rechazar_{lead_id}")
+                ],
+                [
+                    InlineKeyboardButton("📞 Hablar con asesor", callback_data=f"reunion_agendar_{lead_id}")
+                ]
+            ]
+            
+            await bot.send_message(
+                chat_id=chat_id,
+                text="¿Qué te parece la propuesta?",
+                reply_markup=InlineKeyboardMarkup(keyboard)
+            )
+            
+            print(f"✅ Cotización enviada exitosamente a lead {lead_id}")
+            
+        except Exception as e:
+            print(f"❌ Error generando cotización: {e}")
+            import traceback
+            traceback.print_exc()
+            
+            await bot.send_message(
+                chat_id=chat_id,
+                text=(
+                    "Disculpa, tuve un problema generando la cotización automáticamente. "
+                    "Un asesor se comunicará contigo en las próximas horas. 📞"
+                )
+            )
     
     # ─── TRANSCRIPCIÓN DE VOZ ──────────────────────────────────
     
@@ -566,16 +916,52 @@ class LeadsBotHandler:
         self,
         mensaje: str,
         lead_id: str,
-        resultado_orchestrator: dict
+        resultado_orchestrator: dict,
+        servicio_detectado: Optional[str] = None,
+        estimado: Optional[Dict] = None
     ) -> Optional[list]:
         """
         Genera botones inline si el contexto lo requiere.
-        Ejemplo: si se menciona cotización o reunión.
+        
+        Ahora también genera botones automáticamente si:
+        - Se detectó un servicio solicitado
+        - O si el usuario menciona explícitamente precio/cotización
         """
         mensaje_lower = mensaje.lower()
         
+        # ★ NUEVO: Si se detectó un servicio, mostrar botones de cotización
+        # NOTA: Usar callback_data cortos para cumplir límite Telegram (64 chars)
+        if servicio_detectado and estimado:
+            # Guardar servicio detectado en la BD para recuperarlo después
+            try:
+                self.db.table("leads").update(
+                    {"interes": servicio_detectado}
+                ).eq("id", lead_id).execute()
+            except Exception as e:
+                print(f"⚠️ No se pudo guardar servicio en BD: {e}")
+            
+            # Callback data cortos (máx 64 chars)
+            return [
+                [
+                    InlineKeyboardButton(
+                        "✅ Me interesa",
+                        callback_data=f"cot_int_{lead_id}"
+                    ),
+                    InlineKeyboardButton(
+                        "📧 Enviar detalles",
+                        callback_data=f"cot_env_{lead_id}"
+                    )
+                ],
+                [
+                    InlineKeyboardButton(
+                        "📞 Hablar con asesor",
+                        callback_data=f"reu_age_{lead_id}"
+                    )
+                ]
+            ]
+        
         # Si menciona "precio", "cotización", "costo"
-        if any(word in mensaje_lower for word in ["precio", "cotización", "costo", "cuanto"]):
+        if any(word in mensaje_lower for word in ["precio", "cotización", "costo", "cuanto", "cuánto"]):
             return [
                 [
                     InlineKeyboardButton(
@@ -590,7 +976,7 @@ class LeadsBotHandler:
             ]
         
         # Si menciona "reunión", "llamada", "agenda"
-        if any(word in mensaje_lower for word in ["reunión", "reunion", "llamada", "agenda"]):
+        if any(word in mensaje_lower for word in ["reunión", "reunion", "llamada", "agenda", "agendar"]):
             return [
                 [
                     InlineKeyboardButton(

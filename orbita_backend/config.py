@@ -11,6 +11,9 @@ SUPABASE_KEY = os.getenv("SUPABASE_KEY")
 # Configuración de Groq API
 GROQ_API_KEY = os.getenv("GROQ_API_KEY")
 
+# Configuración de OpenAI API
+OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
+
 # Configuración de Telegram — BOT DE LEADS (público)
 TELEGRAM_LEADS_BOT_TOKEN = os.getenv("TELEGRAM_LEADS_BOT_TOKEN")
 TELEGRAM_LEADS_WEBHOOK_SECRET = os.getenv("TELEGRAM_LEADS_WEBHOOK_SECRET", "orbita-leads-secret-2026")
@@ -56,6 +59,10 @@ GROQ_MODELS = {
     "analitico": os.getenv("GROQ_MODEL_ANALITICO", "llama-3.1-8b-instant")
 }
 
+# Configuración para usar OpenAI en el orchestrador
+USE_OPENAI_FOR_ORCHESTRATOR = os.getenv("USE_OPENAI_FOR_ORCHESTRATOR", "true").lower() == "true"
+OPENAI_MODEL_ORCHESTRATOR = os.getenv("OPENAI_MODEL_ORCHESTRATOR", "gpt-4o-mini")
+
 # Configuración de transcripción de voz
 TRANSCRIPTION_MODEL = "whisper-large-v3"
 
@@ -65,6 +72,7 @@ def get_settings():
         "supabase_url": SUPABASE_URL,
         "supabase_key": SUPABASE_KEY,
         "groq_api_key": GROQ_API_KEY,
+        "openai_api_key": OPENAI_API_KEY,
         "telegram_leads_bot_token": TELEGRAM_LEADS_BOT_TOKEN,
         "telegram_leads_webhook_secret": TELEGRAM_LEADS_WEBHOOK_SECRET,
         "telegram_leads_webhook_url": TELEGRAM_LEADS_WEBHOOK_URL,

@@ -836,3 +836,189 @@ class ComunicacionAgent(BaseAgent):
                 "Prepare A/B testing variants"
             ]
         }
+    
+    async def generate_cotizacion(
+        self,
+        lead_data: Dict[str, Any],
+        servicio_solicitado: str,
+        detalles_adicionales: Optional[str] = None
+    ) -> Dict[str, Any]:
+        """
+        Genera una cotización personalizada con IA para un lead.
+        
+        Args:
+            lead_data: Datos del lead (nombre, empresa, email, etc.)
+            servicio_solicitado: Tipo de servicio que solicita el lead
+            detalles_adicionales: Contexto adicional sobre los requerimientos
+            
+        Returns:
+            Dict con la cotización generada y datos estructurados
+        """
+        try:
+            # Construir prompt para generar cotización con IA
+            cotizacion_prompt = f"""
+            Eres un especialista en ventas y elaboración de propuestas comerciales para {EMPRESA_NOMBRE}.
+            
+            INFORMACIÓN DEL CLIENTE:
+            - Nombre: {lead_data.get('nombre', 'Cliente')}
+            - Empresa: {lead_data.get('empresa', 'N/A')}
+            - Cargo: {lead_data.get('cargo', 'N/A')}
+            - Email: {lead_data.get('email', 'N/A')}
+            - Presupuesto estimado: {lead_data.get('presupuesto', 'No especificado')}
+            - Timeline: {lead_data.get('timeline', 'No especificado')}
+            
+            SERVICIO SOLICITADO: {servicio_solicitado}
+            
+            DETALLES ADICIONALES: {detalles_adicionales or 'Ninguno especificado'}
+            
+            CONTEXTO DE LA EMPRESA:
+            - Nombre: {EMPRESA_NOMBRE}
+            - Descripción: {EMPRESA_DESCRIPCION}
+            
+            TAREA: Genera una cotización profesional y personalizada que incluya:
+            
+            1. TÍTULO: Un título atractivo para la propuesta
+            2. DESCRIPCIÓN: Una descripción del entendimiento de la necesidad del cliente (2-3 párrafos)
+            3. ITEMS: Lista de 3-5 items/entregables con:
+               - Nombre del entregable
+               - Descripción detallada
+               - Precio unitario estimado (realista para el mercado)
+            4. PLAN_NOMBRE: Nombre del plan propuesto
+            5. ALCANCE: Descripción del alcance completo del servicio
+            6. FASES: 3-4 fases del proyecto con nombre, descripción y duración
+            7. TIEMPO_TOTAL: Duración total estimada del proyecto
+            8. FORMA_PAGO: Sugerencia de forma de pago (50% inicio, 50% entrega, o similar)
+            9. NOTAS: Notas adicionales o beneficios especiales
+            
+            Responde ÚNICAMENTE en formato JSON válido con esta estructura:
+            {{
+                "titulo": "Título de la propuesta",
+                "descripcion_personalizada": "Texto del entendimiento...",
+                "plan_nombre": "Nombre del plan",
+                "descripcion_alcance": "Descripción del alcance completo",
+                "items": [
+                    {{
+                        "nombre": "Entregable 1",
+                        "descripcion": "Descripción detallada",
+                        "cantidad": 1,
+                        "precio_unitario": 1500.00
+                    }}
+                ],
+                "fases": [
+                    {{
+                        "nombre": "Fase 1",
+                        "descripcion": "Descripción de la fase",
+                        "duracion": "2 semanas"
+                    }}
+                ],
+                "tiempo_total": "6-8 semanas",
+                "forma_pago": "50% al inicio, 50% a la entrega",
+                "notas": "Notas adicionales o beneficios",
+                "descuento_sugerido": 0
+            }}
+            
+            Sé profesional, persuasivo y asegúrate de que los precios sean competitivos y realistas.
+            """
+            
+            # Generar cotización con IA
+            response = await self.generate_response(
+                cotizacion_prompt,
+                session_id=f"cotizacion_{lead_data.get('id', 'temp')}",
+                context={"lead": lead_data, "servicio": servicio_solicitado}
+            )
+            
+            if not response.get("success"):
+                raise Exception("Error al generar contenido con IA")
+            
+            # Parsear respuesta JSON
+            import json
+            try:
+                cotizacion_ia = json.loads(response["response"])
+            except json.JSONDecodeError:
+                # Si no es JSON válido, usar valores por defecto
+                cotizacion_ia = {
+                    "titulo": f"Propuesta de {servicio_solicitado}",
+                    "descripcion_personalizada": f"Propuesta personalizada para {lead_data.get('nombre', 'cliente')}",
+                    "plan_nombre": "Plan Profesional",
+                    "descripcion_alcance": "Desarrollo completo del servicio solicitado",
+                    "items": [
+                        {
+                            "nombre": servicio_solicitado,
+                            "descripcion": "Implementación completa",
+                            "cantidad": 1,
+                            "precio_unitario": 5000.00
+                        }
+                    ],
+                    "fases": [
+                        {"nombre": "Planeación", "descripcion": "Análisis de requerimientos", "duracion": "1 semana"},
+                        {"nombre": "Desarrollo", "descripcion": "Implementación", "duracion": "4 semanas"},
+                        {"nombre": "Entrega", "descripcion": "Capacitación y despliegue", "duracion": "1 semana"}
+                    ],
+                    "tiempo_total": "6 semanas",
+                    "forma_pago": "50% al inicio, 50% a la entrega",
+                    "notas": "Incluye soporte por 30 días",
+                    "descuento_sugerido": 0
+                }
+            
+            # Calcular totales
+            subtotal = sum(item.get("precio_unitario", 0) * item.get("cantidad", 1) 
+                          for item in cotizacion_ia.get("items", []))
+            descuento = cotizacion_ia.get("descuento_sugerido", 0)
+            total = subtotal * (1 - descuento / 100)
+            
+            # Estructurar datos completos de cotización
+            from datetime import datetime, timedelta
+            
+            cotizacion_data = {
+                "lead_id": lead_data.get("id"),
+                "titulo": cotizacion_ia.get("titulo"),
+                "descripcion": cotizacion_ia.get("descripcion_personalizada"),
+                "tipo": "automatizacion",  # Mapear según servicio
+                "items": [
+                    {
+                        "descripcion": item.get("nombre"),
+                        "cantidad": item.get("cantidad", 1),
+                        "precio_unitario": item.get("precio_unitario", 0),
+                        "descuento": 0
+                    }
+                    for item in cotizacion_ia.get("items", [])
+                ],
+                "subtotal": subtotal,
+                "descuento_general": descuento,
+                "impuestos": 0,
+                "total": total,
+                "moneda": "USD",
+                "validez_dias": 30,
+                "status": "borrador",
+                "notas": cotizacion_ia.get("notas"),
+                "terminos_condiciones": "Términos y condiciones estándar de ORBITA",
+                "generada_por_ia": True,
+                "agente_generador": self.agent_name,
+                # Datos adicionales para la plantilla
+                "plan_nombre": cotizacion_ia.get("plan_nombre"),
+                "descripcion_alcance": cotizacion_ia.get("descripcion_alcance"),
+                "fases": cotizacion_ia.get("fases", []),
+                "tiempo_total": cotizacion_ia.get("tiempo_total"),
+                "forma_pago": cotizacion_ia.get("forma_pago"),
+                "created_at": datetime.utcnow().isoformat()
+            }
+            
+            return {
+                "success": True,
+                "cotizacion": cotizacion_data,
+                "agent": self.agent_name,
+                "generada_con_ia": True,
+                "lead_nombre": lead_data.get("nombre"),
+                "servicio": servicio_solicitado,
+                "total_estimado": total,
+                "timestamp": datetime.utcnow().isoformat()
+            }
+            
+        except Exception as e:
+            await self._handle_error("generate_cotizacion_error", str(e), f"lead_{lead_data.get('id')}")
+            return {
+                "success": False,
+                "error": f"Error generando cotización: {str(e)}",
+                "agent": self.agent_name,
+                "fallback_message": "Lo siento, hubo un problema generando la cotización. Un ejecutivo te contactará pronto."
+            }
