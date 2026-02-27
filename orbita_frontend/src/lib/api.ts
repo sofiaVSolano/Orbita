@@ -64,9 +64,23 @@ export const orbitaApi = {
 
     getBotInfo: () =>
         fetch(`${API}/api/v1/telegram/info`, { headers: h() }).then((r) => r.json()),
+    // Ahora retorna: { success: true, data: { bot_leads: {...}, bot_admin: {...} } }
 
-    setupWebhook: () =>
-        fetch(`${API}/api/v1/telegram/setup-webhook`, {
+    setupWebhooks: () =>
+        fetch(`${API}/api/v1/telegram/setup-webhooks`, {
+            method: 'POST',
+            headers: h(),
+        }).then((r) => r.json()),
+    // Configura AMBOS bots en un solo click
+
+    setupLeadsWebhook: () =>
+        fetch(`${API}/api/v1/telegram/setup-leads-webhook`, {
+            method: 'POST',
+            headers: h(),
+        }).then((r) => r.json()),
+
+    setupAdminWebhook: () =>
+        fetch(`${API}/api/v1/telegram/setup-admin-webhook`, {
             method: 'POST',
             headers: h(),
         }).then((r) => r.json()),

@@ -21,8 +21,8 @@ const navItems = [
 const Sidebar: React.FC = () => {
     const navigate = useNavigate()
     const [leadsActivos, setLeadsActivos] = useState(0)
-    const [botUsername, setBotUsername] = useState<string | null>(null)
-    const [botActivo, setBotActivo] = useState(false)
+    const [botLeads, setBotLeads] = useState<{ username?: string; webhook_url?: string } | null>(null)
+    const [botAdmin, setBotAdmin] = useState<{ username?: string; webhook_url?: string } | null>(null)
     const [ultimaActividad, setUltimaActividad] = useState<Date | null>(null)
 
     // Supabase Realtime — contador de leads activos
@@ -44,13 +44,13 @@ const Sidebar: React.FC = () => {
         return () => { supabase.removeChannel(channel) }
     }, [])
 
-    // Bot info
+    // Bot info — ahora retorna bot_leads y bot_admin
     useEffect(() => {
         orbitaApi.getBotInfo()
-            .then((res: Record<string, unknown> & { data?: { bot_username?: string; activo?: boolean } }) => {
+            .then((res: Record<string, unknown> & { data?: { bot_leads?: { username?: string; webhook_url?: string }; bot_admin?: { username?: string; webhook_url?: string } } }) => {
                 if (res?.data) {
-                    setBotUsername(res.data.bot_username ?? null)
-                    setBotActivo(res.data.activo ?? false)
+                    setBotLeads(res.data.bot_leads ?? null)
+                    setBotAdmin(res.data.bot_admin ?? null)
                 }
             })
             .catch(() => { })
@@ -214,11 +214,48 @@ const Sidebar: React.FC = () => {
                     </span>
                 </div>
 
-                {botUsername && (
+                {/* Bot de leads — el que ven los prospectos */}
+                {botLeads && (
                     <div className="flex items-center gap-2">
-                        <span className={`dot-pulse dot-pulse--${botActivo ? 'green' : 'red'}`} style={{ width: 6, height: 6 }} />
+                        <span
+                            className={`dot-pulse dot-pulse--${botLeads.webhook_url ? 'green' : 'red'}`}
+                            style={{ width: 6, height: 6 }}
+                        />
                         <span className="text-muted" style={{ fontSize: 11 }}>
-                            @{botUsername}
+                            {botLeads.username ? `@${botLeads.username}` : 'Bot leads sin config'}
+                        </span>
+                        <span
+                            style={{
+                                fontSize: 9,
+                                color: 'var(--cyan)',
+                                opacity: 0.6,
+                                fontWeight: 600,
+                            }}
+                        >
+                            leads
+                        </span>
+                    </div>
+                )}
+
+                {/* Bot de admin — indicador discreto */}
+                {botAdmin && (
+                    <div className="flex items-center gap-2">
+                        <span
+                            className={`dot-pulse dot-pulse--${botAdmin.webhook_url ? 'blue' : 'gray'}`}
+                            style={{ width: 6, height: 6 }}
+                        />
+                        <span className="text-muted" style={{ fontSize: 11, opacity: 0.6 }}>
+                            {botAdmin.username ? `@${botAdmin.username}` : 'Bot admin sin config'}
+                        </span>
+                        <span
+                            style={{
+                                fontSize: 9,
+                                color: 'var(--purple)',
+                                opacity: 0.5,
+                                fontWeight: 600,
+                            }}
+                        >
+                            admin
                         </span>
                     </div>
                 )}

@@ -1,8 +1,4 @@
-﻿# ORBITA - Sistema Multi-Agente de IA para Gestión de Leads
-# [CRITERIO 6] - API REST documentada con FastAPI
-# [CRITERIO 7] - Aplicación lista para producción
-
-from dotenv import load_dotenv
+﻿from dotenv import load_dotenv
 
 # Cargar variables de entorno
 load_dotenv()
@@ -29,10 +25,8 @@ from routers.telegram import telegram_router
 from database import init_db
 
 # Importar configuración de Telegram
-from telegram_integration.bot import setup_telegram_bot
-
-# Variable global para el bot
-telegram_bot = None
+from Telegram_Bot.bot import setup_leads_webhook, setup_admin_webhook, delete_leads_webhook, delete_admin_webhook
+from config import get_settings
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
@@ -45,23 +39,35 @@ async def lifespan(app: FastAPI):
     await init_db()
     print("✅ Base de datos inicializada")
     
-    # 2. Configurar Telegram Bot
-    print("🤖 Configurando Telegram Bot...")
-    global telegram_bot
+    # 2. Configurar Telegram Bots (Leads + Admin)
+    settings = get_settings()
+    print("🤖 Configurando Telegram Bots...")
     try:
-        telegram_bot = await setup_telegram_bot()
-        print("✅ Telegram Bot configurado")
+        if settings.get("ENVIRONMENT") == "production" or os.getenv("ENVIRONMENT") == "production":
+            leads_username = await setup_leads_webhook()
+            admin_username = await setup_admin_webhook()
+            print(f"✅ Bot de Leads: @{leads_username} | webhook configurado")
+            print(f"✅ Bot de Admin: @{admin_username} | webhook configurado")
+        else:
+            # En desarrollo, eliminar webhooks
+            try:
+                await delete_leads_webhook()
+                await delete_admin_webhook()
+            except:
+                pass
+            print("ℹ️  Modo desarrollo: webhooks desactivados")
+            print("ℹ️  Para usar los bots, ejecuta en otra terminal:")
+            print("    docker exec -it orbita-backend python run_leads_bot.py")
+            
     except Exception as e:
-        print(f"⚠️  Error configurando Telegram Bot: {e}")
+        print(f"⚠️  Error configurando Telegram Bots: {e}")
     
-    print("🎯 ORBITA iniciado correctamente")
+    print("🛸 ORBITA iniciado — 2 bots activos | 5 agentes | Sistema listo")
     
     yield
     
     # Shutdown
     print("🛑 Cerrando ORBITA...")
-    if telegram_bot:
-        await telegram_bot.stop()
     print("👋 ORBITA cerrado")
 
 # Crear aplicación FastAPI
@@ -149,15 +155,25 @@ async def root():
 @app.get("/health", tags=["Sistema"])
 async def health_check():
     """Health check del sistema"""
+    from Telegram_Bot.bot import get_both_bots_info
+    
+    try:
+        bots_info = await get_both_bots_info()
+        telegram_status = "active"
+    except:
+        bots_info = {"bot_leads": None, "bot_admin": None}
+        telegram_status = "inactive"
+    
     return {
         "status": "healthy",
         "timestamp": datetime.now().isoformat(),
         "services": {
             "api": "running",
             "database": "connected",
-            "telegram_bot": "active" if telegram_bot else "inactive",
+            "telegram_bots": telegram_status,
             "groq_api": "available"
-        }
+        },
+        "telegram_bots": bots_info
     }
 
 @app.exception_handler(404)

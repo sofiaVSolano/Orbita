@@ -175,9 +175,9 @@ const Telegram: React.FC = () => {
     const handleSetupWebhook = async () => {
         setConfiguringWebhook(true)
         try {
-            const res = await orbitaApi.setupWebhook()
+            const res = await orbitaApi.setupWebhooks()
             if (res?.success) {
-                toast.success('🔗 Webhook configurado exitosamente', { description: res.webhook_url })
+                toast.success('🔗 Webhook configurado exitosamente')
                 refetchBot()
             } else {
                 toast.error('Error al configurar webhook')

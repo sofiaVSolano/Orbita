@@ -11,10 +11,18 @@ SUPABASE_KEY = os.getenv("SUPABASE_KEY")
 # Configuración de Groq API
 GROQ_API_KEY = os.getenv("GROQ_API_KEY")
 
-# Configuración de Telegram
-TELEGRAM_BOT_TOKEN = os.getenv("TELEGRAM_BOT_TOKEN")
-TELEGRAM_WEBHOOK_SECRET = os.getenv("TELEGRAM_WEBHOOK_SECRET")
-TELEGRAM_WEBHOOK_URL = os.getenv("TELEGRAM_WEBHOOK_URL")
+# Configuración de Telegram — BOT DE LEADS (público)
+TELEGRAM_LEADS_BOT_TOKEN = os.getenv("TELEGRAM_LEADS_BOT_TOKEN")
+TELEGRAM_LEADS_WEBHOOK_SECRET = os.getenv("TELEGRAM_LEADS_WEBHOOK_SECRET", "orbita-leads-secret-2026")
+TELEGRAM_LEADS_WEBHOOK_URL = os.getenv("TELEGRAM_LEADS_WEBHOOK_URL")
+
+# Configuración de Telegram — BOT DE ADMIN (privado)
+TELEGRAM_ADMIN_BOT_TOKEN = os.getenv("TELEGRAM_ADMIN_BOT_TOKEN")
+TELEGRAM_ADMIN_BOT_WEBHOOK_SECRET = os.getenv("TELEGRAM_ADMIN_BOT_WEBHOOK_SECRET", "orbita-admin-secret-2026")
+TELEGRAM_ADMIN_BOT_WEBHOOK_URL = os.getenv("TELEGRAM_ADMIN_BOT_WEBHOOK_URL")
+
+# Chat IDs de administradores (separados por coma)
+TELEGRAM_ADMIN_CHAT_IDS = os.getenv("TELEGRAM_ADMIN_CHAT_IDS", "")
 
 # Configuración del servidor
 HOST = os.getenv("HOST", "0.0.0.0")
@@ -38,13 +46,14 @@ EMPRESA_SERVICIOS = [
     "Consultoría en IA"
 ]
 
-# Configuración de los modelos de IA
+# Configuración de los modelos de IA — cada agente puede tener su modelo
 GROQ_MODELS = {
-    "orchestrator": "llama-3.3-70b-versatile",
-    "captador": "gemma2-9b-it", 
-    "conversacional": "mixtral-8x7b-32768",
-    "identidad": "llama-3.1-8b-instant",
-    "analitico": "llama-3.3-70b-versatile"
+    "orchestrator": os.getenv("GROQ_MODEL_ORCHESTRATOR", "llama-3.3-70b-versatile"),
+    "captador": os.getenv("GROQ_MODEL_CAPTADOR", "llama-3.3-70b-versatile"), 
+    "conversacional": os.getenv("GROQ_MODEL_CONVERSACIONAL", "llama-3.1-8b-instant"),
+    "identidad": os.getenv("GROQ_MODEL_IDENTIDAD", "mixtral-8x7b-32768"),
+    "comunicacion": os.getenv("GROQ_MODEL_COMUNICACION", "llama-3.1-70b-versatile"),
+    "analitico": os.getenv("GROQ_MODEL_ANALITICO", "gemma2-9b-it")
 }
 
 # Configuración de transcripción de voz
@@ -56,9 +65,13 @@ def get_settings():
         "supabase_url": SUPABASE_URL,
         "supabase_key": SUPABASE_KEY,
         "groq_api_key": GROQ_API_KEY,
-        "telegram_bot_token": TELEGRAM_BOT_TOKEN,
-        "telegram_webhook_secret": TELEGRAM_WEBHOOK_SECRET,
-        "telegram_webhook_url": TELEGRAM_WEBHOOK_URL,
+        "telegram_leads_bot_token": TELEGRAM_LEADS_BOT_TOKEN,
+        "telegram_leads_webhook_secret": TELEGRAM_LEADS_WEBHOOK_SECRET,
+        "telegram_leads_webhook_url": TELEGRAM_LEADS_WEBHOOK_URL,
+        "telegram_admin_bot_token": TELEGRAM_ADMIN_BOT_TOKEN,
+        "telegram_admin_bot_webhook_secret": TELEGRAM_ADMIN_BOT_WEBHOOK_SECRET,
+        "telegram_admin_bot_webhook_url": TELEGRAM_ADMIN_BOT_WEBHOOK_URL,
+        "telegram_admin_chat_ids": TELEGRAM_ADMIN_CHAT_IDS,
         "host": HOST,
         "port": PORT,
         "debug": DEBUG,
@@ -73,6 +86,18 @@ def get_settings():
         "transcription_model": TRANSCRIPTION_MODEL
     }
 
+def get_admin_chat_ids_list() -> list:
+    """
+    Parsea los chat IDs de administrador desde la configuración.
+    Retorna una lista de strings.
+    Uso: chat_ids = get_admin_chat_ids_list()
+    """
+    return [
+        cid.strip()
+        for cid in TELEGRAM_ADMIN_CHAT_IDS.split(",")
+        if cid.strip()
+    ]
+
 def validate_environment():
     """Valida que todas las variables de entorno críticas estén configuradas"""
     missing_vars = []
@@ -83,6 +108,10 @@ def validate_environment():
         missing_vars.append("SUPABASE_KEY")
     if not GROQ_API_KEY:
         missing_vars.append("GROQ_API_KEY")
+    if not TELEGRAM_LEADS_BOT_TOKEN:
+        missing_vars.append("TELEGRAM_LEADS_BOT_TOKEN")
+    if not TELEGRAM_ADMIN_BOT_TOKEN:
+        missing_vars.append("TELEGRAM_ADMIN_BOT_TOKEN")
         
     if missing_vars:
         print(f"❌ Variables de entorno faltantes: {', '.join(missing_vars)}")
@@ -97,9 +126,10 @@ environment = os.getenv("ENVIRONMENT", "development")
 if environment == "production":
     # Configuración para producción
     DEBUG = False
-    JWT_SECRET_KEY = os.getenv("JWT_SECRET_KEY")  # Debe estar configurada en producción
-    if not JWT_SECRET_KEY:
-        raise ValueError("JWT_SECRET_KEY debe estar configurada en producción")
+    _jwt_key = os.getenv("JWT_SECRET") or os.getenv("JWT_SECRET_KEY")
+    if not _jwt_key:
+        raise ValueError("JWT_SECRET debe estar configurada en .env")
+    JWT_SECRET_KEY = _jwt_key
 elif environment == "development":
     # Configuración para desarrollo
     DEBUG = True

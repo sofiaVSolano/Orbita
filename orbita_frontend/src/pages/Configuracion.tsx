@@ -34,7 +34,7 @@ const Configuracion: React.FC = () => {
     const [formEmpresa, setFormEmpresa] = useState<Partial<Empresa>>({})
     const [saving, setSaving] = useState(false)
     const [notifs, setNotifs] = useState<Record<string, boolean>>({})
-    const [configuringWebhook, setConfiguringWebhook] = useState(false)
+    const [configuringWebhook, setConfiguringWebhook] = useState<'leads' | 'admin' | 'ambos' | null>(null)
 
     // Bot info
     const { data: botData, refetch: refetchBot } = useQuery({
@@ -43,6 +43,8 @@ const Configuracion: React.FC = () => {
         retry: 1,
     })
     const bot = botData?.data || {}
+    const botLeads = bot.bot_leads || {}
+    const botAdmin = bot.bot_admin || {}
 
     // Load empresa
     useEffect(() => {
@@ -87,12 +89,16 @@ const Configuracion: React.FC = () => {
         toast.success(updated[key] ? `🔔 Activada: ${key}` : `🔕 Desactivada: ${key}`, { duration: 1500 })
     }
 
-    const handleSetupWebhook = async () => {
-        setConfiguringWebhook(true)
+    const handleSetupWebhook = async (tipo: 'leads' | 'admin' | 'ambos') => {
+        setConfiguringWebhook(tipo)
         try {
-            const res = await orbitaApi.setupWebhook()
-            if (res?.success || res?.data?.success) {
-                toast.success('🔗 Webhook configurado exitosamente')
+            let res
+            if (tipo === 'ambos') res = await orbitaApi.setupWebhooks()
+            else if (tipo === 'leads') res = await orbitaApi.setupLeadsWebhook()
+            else if (tipo === 'admin') res = await orbitaApi.setupAdminWebhook()
+            
+            if (res?.success) {
+                toast.success(`🔗 Webhook ${tipo === 'ambos' ? 'de ambos bots' : `del bot de ${tipo}`} configurado`)
                 refetchBot()
             } else {
                 toast.error('Error al configurar webhook')
@@ -100,7 +106,7 @@ const Configuracion: React.FC = () => {
         } catch {
             toast.error('No se pudo conectar al backend')
         } finally {
-            setConfiguringWebhook(false)
+            setConfiguringWebhook(null)
         }
     }
 
@@ -206,79 +212,143 @@ const Configuracion: React.FC = () => {
 
                 {/* Right column */}
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
-                    {/* Telegram config */}
+                    {/* Telegram config — Dual Bot */}
                     <div className="card card--blue fade-up">
-                        <h3 style={{ marginBottom: '1.25rem' }}>📱 Configuración de Telegram</h3>
-
-                        {/* Bot info */}
-                        <div style={{ padding: '0.875rem', background: 'rgba(0,209,255,0.06)', borderRadius: 6, marginBottom: '1rem', border: '1px solid rgba(0,209,255,0.15)' }}>
-                            <div className="grid-2" style={{ gap: '0.75rem' }}>
-                                <div>
-                                    <div className="form-label">Nombre del bot</div>
-                                    <div style={{ fontWeight: 600 }}>{bot.bot_nombre || '—'}</div>
-                                </div>
-                                <div>
-                                    <div className="form-label">Username</div>
-                                    <div className="font-mono" style={{ color: 'var(--blue)' }}>@{bot.bot_username || '—'}</div>
-                                </div>
-                                <div>
-                                    <div className="form-label">Estado</div>
-                                    <div className="flex items-center gap-2">
-                                        <span className={`dot-pulse dot-pulse--${bot.activo ? 'green' : 'red'}`} />
-                                        <span style={{ fontSize: 12, color: bot.activo ? 'var(--green)' : '#FF5050' }}>
-                                            {bot.activo ? 'ACTIVO' : 'INACTIVO'}
-                                        </span>
-                                    </div>
-                                </div>
-                                <div>
-                                    <div className="form-label">Updates pendientes</div>
-                                    <div className="font-mono" style={{ fontSize: 14 }}>{bot.pending_updates ?? '—'}</div>
-                                </div>
-                            </div>
-                            {bot.webhook_url && (
-                                <div style={{ marginTop: 8, paddingTop: 8, borderTop: '1px solid rgba(255,255,255,0.06)' }}>
-                                    <div className="form-label">Webhook URL</div>
-                                    <div className="font-mono" style={{ fontSize: 10, color: 'var(--text-muted)', wordBreak: 'break-all' }}>
-                                        {bot.webhook_url}
-                                    </div>
-                                </div>
-                            )}
-                        </div>
-
-                        {/* Webhook status */}
-                        <div style={{ padding: '0.875rem', background: bot.webhook_url ? 'rgba(80,250,123,0.04)' : 'rgba(255,80,80,0.04)', borderRadius: 6, marginBottom: '1rem', border: `1px solid ${bot.webhook_url ? 'rgba(80,250,123,0.15)' : 'rgba(255,80,80,0.15)'}` }}>
-                            <div className="flex items-center gap-2 mb-1">
-                                <span>{bot.webhook_url ? '✅' : '⚠️'}</span>
-                                <span style={{ fontWeight: 600, fontSize: 12 }}>
-                                    {bot.webhook_url ? 'Webhook configurado' : 'Webhook no configurado'}
-                                </span>
-                            </div>
-                            <div className="text-muted" style={{ fontSize: 11 }}>
-                                {bot.webhook_url
-                                    ? 'El bot está recibiendo mensajes correctamente'
-                                    : 'El bot no está conectado. Configura el webhook para empezar a recibir mensajes.'}
-                            </div>
-                        </div>
-
-                        <button
-                            className="btn btn--blue w-full mb-3"
-                            onClick={handleSetupWebhook}
-                            disabled={configuringWebhook}
-                        >
-                            {configuringWebhook ? '⏳ Configurando...' : '🔄 Reconfigurar Webhook'}
-                        </button>
-
-                        {bot.bot_username && (
-                            <a
-                                href={`https://t.me/${bot.bot_username}`}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className="btn btn--secondary w-full"
-                                style={{ display: 'block', textAlign: 'center', textDecoration: 'none' }}
+                        <div className="flex items-center justify-between mb-4">
+                            <h3>📱 Configuración de Telegram</h3>
+                            <button
+                                className="btn btn--sm btn--secondary"
+                                onClick={() => handleSetupWebhook('ambos')}
+                                disabled={configuringWebhook === 'ambos'}
+                                style={{ fontSize: 11 }}
                             >
-                                🔗 Abrir @{bot.bot_username} en Telegram
-                            </a>
-                        )}
+                                {configuringWebhook === 'ambos' ? '⏳' : '🔄'} Ambos
+                            </button>
+                        </div>
+
+                        {/* Bot de Leads */}
+                        <div style={{
+                            padding: '0.875rem',
+                            background: 'rgba(80,250,123,0.06)',
+                            borderRadius: 6,
+                            marginBottom: '1rem',
+                            border: '1px solid rgba(80,250,123,0.15)'
+                        }}>
+                            <div className="flex items-center justify-between mb-3">
+                                <div className="flex items-center gap-2">
+                                    <span style={{ fontSize: 18 }}>📱</span>
+                                    <div>
+                                        <div style={{ fontWeight: 700, fontSize: 13 }}>Bot de Leads</div>
+                                        <div className="text-muted" style={{ fontSize: 10 }}>Público para prospectos</div>
+                                    </div>
+                                </div>
+                                <div className="flex items-center gap-2">
+                                    <span className={`dot-pulse dot-pulse--${botLeads.webhook_url ? 'green' : 'red'}`} style={{ width: 6, height: 6 }} />
+                                    <span style={{ fontSize: 10, color: botLeads.webhook_url ? 'var(--green)' : '#FF5050' }}>
+                                        {botLeads.webhook_url ? 'ACTIVO' : 'SIN CONFIG'}
+                                    </span>
+                                </div>
+                            </div>
+
+                            <div className="grid-2" style={{ gap: '0.5rem', marginBottom: '0.75rem' }}>
+                                <div>
+                                    <div className="form-label" style={{ fontSize: 10 }}>Username</div>
+                                    <div className="font-mono" style={{ fontSize: 11, color: 'var(--green)' }}>
+                                        @{botLeads.username || 'orbita_leads_bot'}
+                                    </div>
+                                </div>
+                                <div>
+                                    <div className="form-label" style={{ fontSize: 10 }}>Webhook</div>
+                                    <div style={{ fontSize: 10 }}>
+                                        {botLeads.webhook_url ? '✅ Configurado' : '⚠️ No configurado'}
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div className="flex gap-2">
+                                <button
+                                    className="btn btn--sm btn--green"
+                                    onClick={() => handleSetupWebhook('leads')}
+                                    disabled={configuringWebhook === 'leads'}
+                                    style={{ flex: 1, fontSize: 10 }}
+                                >
+                                    {configuringWebhook === 'leads' ? '⏳' : '🔄 Webhook'}
+                                </button>
+                                {botLeads.username && (
+                                    <a
+                                        href={`https://t.me/${botLeads.username}`}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        className="btn btn--sm btn--secondary"
+                                        style={{ flex: 1, fontSize: 10, textAlign: 'center', textDecoration: 'none' }}
+                                    >
+                                        🔗 Abrir
+                                    </a>
+                                )}
+                            </div>
+                        </div>
+
+                        {/* Bot de Admin */}
+                        <div style={{
+                            padding: '0.875rem',
+                            background: 'rgba(0,209,255,0.06)',
+                            borderRadius: 6,
+                            marginBottom: '1rem',
+                            border: '1px solid rgba(0,209,255,0.15)'
+                        }}>
+                            <div className="flex items-center justify-between mb-3">
+                                <div className="flex items-center gap-2">
+                                    <span style={{ fontSize: 18 }}>🛸</span>
+                                    <div>
+                                        <div style={{ fontWeight: 700, fontSize: 13 }}>Bot de Admin</div>
+                                        <div className="text-muted" style={{ fontSize: 10 }}>Privado para equipo</div>
+                                    </div>
+                                </div>
+                                <div className="flex items-center gap-2">
+                                    <span className={`dot-pulse dot-pulse--${botAdmin.webhook_url ? 'blue' : 'gray'}`} style={{ width: 6, height: 6 }} />
+                                    <span style={{ fontSize: 10, color: botAdmin.webhook_url ? 'var(--blue)' : '#8B949E' }}>
+                                        {botAdmin.webhook_url ? 'ACTIVO' : 'SIN CONFIG'}
+                                    </span>
+                                </div>
+                            </div>
+
+                            <div className="grid-2" style={{ gap: '0.5rem', marginBottom: '0.75rem' }}>
+                                <div>
+                                    <div className="form-label" style={{ fontSize: 10 }}>Username</div>
+                                    <div className="font-mono" style={{ fontSize: 11, color: 'var(--blue)' }}>
+                                        @{botAdmin.username || 'orbita_admin_bot'}
+                                    </div>
+                                </div>
+                                <div>
+                                    <div className="form-label" style={{ fontSize: 10 }}>Comandos</div>
+                                    <div className="font-mono" style={{ fontSize: 9, color: 'var(--text-muted)' }}>
+                                        /leads /stats /alertas
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div className="flex gap-2">
+                                <button
+                                    className="btn btn--sm btn--blue"
+                                    onClick={() => handleSetupWebhook('admin')}
+                                    disabled={configuringWebhook === 'admin'}
+                                    style={{ flex: 1, fontSize: 10 }}
+                                >
+                                    {configuringWebhook === 'admin' ? '⏳' : '🔄 Webhook'}
+                                </button>
+                                {botAdmin.username && (
+                                    <a
+                                        href={`https://t.me/${botAdmin.username}`}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        className="btn btn--sm btn--secondary"
+                                        style={{ flex: 1, fontSize: 10, textAlign: 'center', textDecoration: 'none' }}
+                                    >
+                                        🔗 Abrir
+                                    </a>
+                                )}
+                            </div>
+                        </div>
 
                         {/* Setup instructions */}
                         <div style={{ marginTop: '1.25rem', padding: '0.875rem', background: 'rgba(255,255,255,0.02)', borderRadius: 6, border: '1px solid var(--border)' }}>

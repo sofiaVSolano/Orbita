@@ -18,8 +18,8 @@ services:
     ports:
       - "8000:8000"
     environment:
-      - ENVIRONMENT=production
-      - DEBUG=false
+      - ENVIRONMENT=development
+      - DEBUG=true
     env_file:
       - ./orbita_backend/.env
     volumes:
