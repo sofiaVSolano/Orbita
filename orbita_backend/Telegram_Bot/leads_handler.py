@@ -158,21 +158,37 @@ class LeadsBotHandler:
             agente_usado = resultado.get("agente", "conversacional")
             await self._guardar_mensaje(lead_id, "assistant", respuesta, "text", agente_usado)
             
-            # Enviar respuesta
-            if botones:
-                keyboard = InlineKeyboardMarkup(botones)
-                await bot.send_message(
-                    chat_id=chat_id,
-                    text=respuesta,
-                    parse_mode=ParseMode.MARKDOWN,
-                    reply_markup=keyboard
-                )
-            else:
-                await bot.send_message(
-                    chat_id=chat_id,
-                    text=respuesta,
-                    parse_mode=ParseMode.MARKDOWN
-                )
+            # Enviar respuesta (intentar con Markdown, si falla enviar como texto plano)
+            try:
+                if botones:
+                    keyboard = InlineKeyboardMarkup(botones)
+                    await bot.send_message(
+                        chat_id=chat_id,
+                        text=respuesta,
+                        parse_mode=ParseMode.MARKDOWN,
+                        reply_markup=keyboard
+                    )
+                else:
+                    await bot.send_message(
+                        chat_id=chat_id,
+                        text=respuesta,
+                        parse_mode=ParseMode.MARKDOWN
+                    )
+            except Exception as markdown_error:
+                # Si falla el Markdown, enviar como texto plano
+                print(f"⚠️ Error con Markdown, enviando como texto plano: {markdown_error}")
+                if botones:
+                    keyboard = InlineKeyboardMarkup(botones)
+                    await bot.send_message(
+                        chat_id=chat_id,
+                        text=respuesta,
+                        reply_markup=keyboard
+                    )
+                else:
+                    await bot.send_message(
+                        chat_id=chat_id,
+                        text=respuesta
+                    )
             
         except Exception as e:
             print(f"❌ Error procesando mensaje: {e}")

@@ -13,13 +13,30 @@ class OrchestratorAgent(BaseAgent):
     """
     
     def __init__(self):
-        model = GROQ_MODELS.get("orchestrator", "llama-3.3-70b-versatile")
+        # Usar modelo configurado en config.py
+        model = GROQ_MODELS.get("orchestrator", "llama-3.1-8b-instant")
         super().__init__(agent_name="orchestrator", model=model)
         
         # System prompt para el orquestador
-        self.system_prompt = """Eres el Orquestador del sistema ORBITA, especializado en analizar consultas y coordinar respuestas.
-Tu rol es comprender la intención del usuario y generar respuestas apropiadas o decidir qué agente debe manejar la consulta.
-Sé conversacional, amable y profesional."""
+        self.system_prompt = """Eres el asistente conversacional de ORBITA, una empresa de desarrollo de software y marketing digital.
+
+Tu rol es ayudar a los clientes potenciales respondiendo sus preguntas de forma amigable, profesional y útil.
+
+Servicios principales de ORBITA:
+- Desarrollo de páginas web y aplicaciones móviles
+- Marketing digital y redes sociales
+- Automatización de procesos con IA
+- Consultoría tecnológica
+- Hosting y mantenimiento
+
+Guías de conversación:
+- Sé amigable, profesional y conciso
+- Si preguntan por servicios, describe brevemente y ofrece más información
+- Si mencionan presupuestos, pregunta detalles del proyecto
+- Si quieren agendar reunión, confirma disponibilidad
+- Captura información relevante: nombre, empresa, servicio de interés
+
+Responde de forma natural y conversacional."""
         
         # Registro de agentes disponibles
         self.available_agents = {
@@ -69,13 +86,19 @@ Sé conversacional, amable y profesional."""
             selected_agent = intention_analysis["selected_agent"]
             confidence = intention_analysis["confidence"]
             
-            # Si la confianza es baja, manejar directamente
-            if confidence < 0.7:
-                return await self._handle_directly(message, session_id, context)
+            # SIEMPRE generar una respuesta, ya sea delegando o manejando directamente
+            if confidence < 0.7 or selected_agent == "conversacional":
+                # Manejar directamente con el orchestrator
+                response_result = await self._handle_directly(message, session_id, context)
+            else:
+                # Delegar al agente especializado y luego generar respuesta conversacional
+                # Por ahora, manejamos todo conversacionalmente
+                response_result = await self._handle_directly(message, session_id, context)
             
-            # Preparar respuesta de coordinación
+            # Combinar información de coordinación con la respuesta
             coordination_result = {
                 "success": True,
+                "response": response_result.get("response", "Gracias por tu mensaje. ¿En qué puedo ayudarte?"),
                 "route_to_agent": selected_agent,
                 "confidence": confidence,
                 "reasoning": intention_analysis["reasoning"],
@@ -92,6 +115,7 @@ Sé conversacional, amable y profesional."""
             return {
                 "success": False,
                 "error": f"Error en orquestación: {str(e)}",
+                "response": "Disculpa, tuve un problema procesando tu mensaje. ¿Podrías intentar de nuevo?",
                 "agent": self.agent_name
             }
     

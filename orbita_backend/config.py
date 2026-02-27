@@ -48,12 +48,12 @@ EMPRESA_SERVICIOS = [
 
 # Configuración de los modelos de IA — cada agente puede tener su modelo
 GROQ_MODELS = {
-    "orchestrator": os.getenv("GROQ_MODEL_ORCHESTRATOR", "llama-3.3-70b-versatile"),
-    "captador": os.getenv("GROQ_MODEL_CAPTADOR", "llama-3.3-70b-versatile"), 
+    "orchestrator": os.getenv("GROQ_MODEL_ORCHESTRATOR", "llama-3.1-8b-instant"),  # Modelo rápido y económico
+    "captador": os.getenv("GROQ_MODEL_CAPTADOR", "llama-3.1-8b-instant"),  # Modelo rápido
     "conversacional": os.getenv("GROQ_MODEL_CONVERSACIONAL", "llama-3.1-8b-instant"),
-    "identidad": os.getenv("GROQ_MODEL_IDENTIDAD", "mixtral-8x7b-32768"),
-    "comunicacion": os.getenv("GROQ_MODEL_COMUNICACION", "llama-3.1-70b-versatile"),
-    "analitico": os.getenv("GROQ_MODEL_ANALITICO", "gemma2-9b-it")
+    "identidad": os.getenv("GROQ_MODEL_IDENTIDAD", "llama-3.1-8b-instant"),
+    "comunicacion": os.getenv("GROQ_MODEL_COMUNICACION", "llama-3.1-8b-instant"),
+    "analitico": os.getenv("GROQ_MODEL_ANALITICO", "llama-3.1-8b-instant")
 }
 
 # Configuración de transcripción de voz
