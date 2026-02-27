@@ -1,210 +1,102 @@
-﻿ó#ó ó[óCóRóIóTóEóRóIóOó ó3ó]ó ó-ó óUóSóOó óRóEóAóLó óDóEó óIóAó:ó óLólóaómóaódóaósó óróeóaólóeósó óaó óGóróoóqó óAóPóIó óeónó óCóAóDóAó óaócócóió├ó│ónóó
-ó#ó ó[óCóRóIóTóEóRóIóOó ó3ó]ó ó-ó óLóoógógóiónógó ódóeó ómóoódóeólóoó,ó ótóoókóeónósó óyó ólóaótóeónócóióaó óeónó ócóaódóaó ólólóaómóaódóaóó
-óó
-óiómópóoórótó ótóiómóeóó
-ófóróoómó ótóyópóiónógó óiómópóoórótó óDóiócótó,ó óAónóyó,ó óOópótóióoónóaóló,ó óLóiósótóó
-óiómópóoórótó ógóróoóqóó
-ófóróoómó ócóoónófóiógó óiómópóoórótó ógóeótó_ósóeótótóiónógósóó
-ófóróoómó ódóaótóaóbóaósóeó óiómópóoórótó ósóaóvóeó_óaógóeónótó_ólóoógóó
-óó
-óó
-ócólóaósósó óGóróoóqóCólóióeónótó:óó
-ó ó ó ó ó"ó"ó"óó
-ó ó ó ó óCólóióeónótóeó ópóaóróaó óiónótóeóróaócótóuóaóró ócóoónó óGóróoóqó óAóPóIó.óó
-ó ó ó ó óMóaónóeójóaó ódóiófóeóróeónótóeósó ómóoódóeólóoósó ópóaóróaó ódóiófóeóróeónótóeósó óaógóeónótóeósó ósóeógó├ó║ónó ólóaósó óeósópóeócóiófóiócóaócóióoónóeósó.óó
-ó ó ó ó ó"ó"ó"óó
-ó ó ó ó óó
-ó ó ó ó ódóeófó ó_ó_óiónóiótó_ó_ó(ósóeólófó)ó:óó
-ó ó ó ó ó ó ó ó ósóeótótóiónógósó ó=ó ógóeótó_ósóeótótóiónógósó(ó)óó
-ó ó ó ó ó ó ó ó ósóeólófó.ócólóióeónótó ó=ó ógóróoóqó.óGóróoóqó(óaópóió_ókóeóyó=ósóeótótóiónógósó.ógóróoóqó_óaópóió_ókóeóyó)óó
-ó ó ó ó ó ó ó ó óó
-ó ó ó ó ó ó ó ó ó#ó óMóoódóeólóoósó óeósópóeócó├ó¡ófóiócóoósó ópóoóró óaógóeónótóeó ósóeógó├ó║ónó ólóaósó óeósópóeócóiófóiócóaócóióoónóeósóó
-ó ó ó ó ó ó ó ó ósóeólófó.óaógóeónótó_ómóoódóeólósó ó=ó ó{óó
-ó ó ó ó ó ó ó ó ó ó ó ó ó"óoóróqóuóeósótóaódóoóró"ó:ó ó"ólólóaómóaó-ó3ó.ó3ó-ó7ó0óbó-óvóeórósóaótóiólóeó"ó,óó
-ó ó ó ó ó ó ó ó ó ó ó ó ó"ócóaópótóaódóoóró"ó:ó ó"ógóeómómóaó2ó-ó9óbó-óiótó"ó,ó óó
-ó ó ó ó ó ó ó ó ó ó ó ó ó"ócóoónóvóeórósóaócóióoónóaóló"ó:ó ó"ólólóaómóaó-ó3ó.ó3ó-ó7ó0óbó-óvóeórósóaótóiólóeó"ó,óó
-ó ó ó ó ó ó ó ó ó ó ó ó ó"óiódóeónótóiódóaódó"ó:ó ó"ómóióxótóróaóló-ó8óxó7óbó-ó3ó2ó7ó6ó8ó"ó,óó
-ó ó ó ó ó ó ó ó ó ó ó ó ó"ócóoómóuónóiócóaócóióoónó"ó:ó ó"ólólóaómóaó-ó3ó.ó1ó-ó8óbó-óiónósótóaónótó"ó,óó
-ó ó ó ó ó ó ó ó ó ó ó ó ó"óaónóaólóiótóiócóoó"ó:ó ó"ólólóaómóaó-ó3ó.ó1ó-ó8óbó-óiónósótóaónótó"óó
-ó ó ó ó ó ó ó ó ó}óó
-ó ó ó ó óó
-ó ó ó ó ódóeófó ógóeótó_ómóoódóeóló_ófóoóró_óaógóeónótó(ósóeólófó,ó óaógóeónótó_ónóaómóeó:ó ósótóró)ó ó-ó>ó ósótóró:óó
-ó ó ó ó ó ó ó ó ó"ó"ó"óOóbótóióeónóeó óeóló ómóoódóeólóoó óeósópóeócó├ó¡ófóiócóoó ópóaóróaó ócóaódóaó óaógóeónótóeó.ó"ó"ó"óó
-ó ó ó ó ó ó ó ó óróeótóuórónó ósóeólófó.óaógóeónótó_ómóoódóeólósó.ógóeótó(óaógóeónótó_ónóaómóeó,ó ó"ólólóaómóaó-ó3ó.ó1ó-ó8óbó-óiónósótóaónótó"ó)óó
-ó ó ó ó óó
-ó ó ó ó óaósóyónócó ódóeófó ócóhóaótó_ócóoómópólóeótóióoónó(ósóeólófó,ó óó
-ó ó ó ó ó ó ó ó ó ó ó ó ó ó ó ó ó ó ó ó ó ó ó ó ó ó ó ó ómóeósósóaógóeósó:ó óLóiósótó[óDóiócótó[ósótóró,ó ósótóró]ó]ó,ó óó
-ó ó ó ó ó ó ó ó ó ó ó ó ó ó ó ó ó ó ó ó ó ó ó ó ó ó ó ó óaógóeónótó_ónóaómóeó:ó ósótóró,óó
-ó ó ó ó ó ó ó ó ó ó ó ó ó ó ó ó ó ó ó ó ó ó ó ó ó ó ó ó ótóeómópóeóróaótóuóróeó:ó ófólóoóaótó ó=ó ó0ó.ó7ó,óó
-ó ó ó ó ó ó ó ó ó ó ó ó ó ó ó ó ó ó ó ó ó ó ó ó ó ó ó ó ómóaóxó_ótóoókóeónósó:ó óiónótó ó=ó ó1ó0ó0ó0ó,óó
-ó ó ó ó ó ó ó ó ó ó ó ó ó ó ó ó ó ó ó ó ó ó ó ó ó ó ó ó ólóeóaódó_óiódó:ó ósótóró ó=ó óNóoónóeó,óó
-ó ó ó ó ó ó ó ó ó ó ó ó ó ó ó ó ó ó ó ó ó ó ó ó ó ó ó ó ósóeósósóióoónó_óiódó:ó ósótóró ó=ó óNóoónóeó,óó
-ó ó ó ó ó ó ó ó ó ó ó ó ó ó ó ó ó ó ó ó ó ó ó ó ó ó ó ó ólóoógó_óeóxóeócóuótóióoónó:ó óbóoóoóló ó=ó óTóróuóeó)ó ó-ó>ó óDóiócótó[ósótóró,ó óAónóyó]ó:óó
-ó ó ó ó ó ó ó ó ó"ó"ó"óó
-ó ó ó ó ó ó ó ó óEójóeócóuótóaó ócóhóaótó ócóoómópólóeótóióoónó óyó óróeógóiósótóróaó ómó├ó®ótóróiócóaósó.óó
-ó ó ó ó ó ó ó ó óó
-ó ó ó ó ó ó ó ó óAórógósó:óó
-ó ó ó ó ó ó ó ó ó ó ó ó ómóeósósóaógóeósó:ó óLóiósótóaó ódóeó ómóeónósóaójóeósó ó[ó{ó"óróoólóeó"ó:ó ó"óuósóeóró/ósóyósótóeómó/óaósósóiósótóaónótó"ó,ó ó"ócóoónótóeónótó"ó:ó ó"ó.ó.ó.ó"ó}ó]óó
-ó ó ó ó ó ó ó ó ó ó ó ó óaógóeónótó_ónóaómóeó:ó óNóoómóbóróeó ódóeóló óaógóeónótóeó ó(ópóaóróaó ósóeólóeócócóió├ó│ónó ódóeó ómóoódóeólóoó)óó
-ó ó ó ó ó ó ó ó ó ó ó ó ótóeómópóeóróaótóuóróeó:ó óCóróeóaótóióvóiódóaódó ódóeóló ómóoódóeólóoó ó(ó0ó.ó0ó ó-ó ó1ó.ó0ó)óó
-ó ó ó ó ó ó ó ó ó ó ó ó ómóaóxó_ótóoókóeónósó:ó óMó├óíóxóiómóoó ódóeó ótóoókóeónósó ódóeó óróeósópóuóeósótóaóó
-ó ó ó ó ó ó ó ó ó ó ó ó ólóeóaódó_óiódó:ó óIóDó ódóeóló ólóeóaódó ó(ópóaóróaó ólóoógógóiónógó)óó
-ó ó ó ó ó ó ó ó ó ó ó ó ósóeósósóióoónó_óiódó:ó óIóDó ódóeó ósóeósóió├ó│ónó ó(ópóaóróaó ólóoógógóiónógó)óó
-ó ó ó ó ó ó ó ó ó ó ó ó ólóoógó_óeóxóeócóuótóióoónó:ó óSóió ógóuóaóródóaóró ólóoógó óeónó óBóDóó
-ó ó ó ó ó ó ó ó ó ó ó ó óó
-ó ó ó ó ó ó ó ó óRóeótóuórónósó:óó
-ó ó ó ó ó ó ó ó ó ó ó ó ó{óó
-ó ó ó ó ó ó ó ó ó ó ó ó ó ó ó ó ó"ósóuócócóeósósó"ó:ó óbóoóoóló,óó
-ó ó ó ó ó ó ó ó ó ó ó ó ó ó ó ó ó"ócóoónótóeónótó"ó:ó ósótóró,óó
-ó ó ó ó ó ó ó ó ó ó ó ó ó ó ó ó ó"ómóoódóeóló_óuósóeódó"ó:ó ósótóró,óó
-ó ó ó ó ó ó ó ó ó ó ó ó ó ó ó ó ó"ótóoókóeónósó_óiónópóuótó"ó:ó óiónótó,óó
-ó ó ó ó ó ó ó ó ó ó ó ó ó ó ó ó ó"ótóoókóeónósó_óoóuótópóuótó"ó:ó óiónótó,óó
-ó ó ó ó ó ó ó ó ó ó ó ó ó ó ó ó ó"ólóaótóeónócóióaó_ómósó"ó:ó óiónótó,óó
-ó ó ó ó ó ó ó ó ó ó ó ó ó ó ó ó ó"óeóróróoóró"ó:ó ósótóró ó(ósóió óhóaóyó óeóróróoóró)óó
-ó ó ó ó ó ó ó ó ó ó ó ó ó}óó
-ó ó ó ó ó ó ó ó ó"ó"ó"óó
-ó ó ó ó ó ó ó ó ómóoódóeóló ó=ó ósóeólófó.ógóeótó_ómóoódóeóló_ófóoóró_óaógóeónótó(óaógóeónótó_ónóaómóeó)óó
-ó ó ó ó ó ó ó ó ósótóaórótó_ótóiómóeó ó=ó ótóiómóeó.ótóiómóeó(ó)óó
-ó ó ó ó ó ó ó ó óó
-ó ó ó ó ó ó ó ó ótóróyó:óó
-ó ó ó ó ó ó ó ó ó ó ó ó óróeósópóoónósóeó ó=ó ósóeólófó.ócólóióeónótó.ócóhóaótó.ócóoómópólóeótóióoónósó.ócóróeóaótóeó(óó
-ó ó ó ó ó ó ó ó ó ó ó ó ó ó ó ó ómóoódóeóló=ómóoódóeóló,óó
-ó ó ó ó ó ó ó ó ó ó ó ó ó ó ó ó ómóeósósóaógóeósó=ómóeósósóaógóeósó,óó
-ó ó ó ó ó ó ó ó ó ó ó ó ó ó ó ó ótóeómópóeóróaótóuóróeó=ótóeómópóeóróaótóuóróeó,óó
-ó ó ó ó ó ó ó ó ó ó ó ó ó ó ó ó ómóaóxó_ótóoókóeónósó=ómóaóxó_ótóoókóeónósó,óó
-ó ó ó ó ó ó ó ó ó ó ó ó ó ó ó ó ósótóróeóaómó=óFóaólósóeóó
-ó ó ó ó ó ó ó ó ó ó ó ó ó)óó
-ó ó ó ó ó ó ó ó ó ó ó ó óó
-ó ó ó ó ó ó ó ó ó ó ó ó óeónódó_ótóiómóeó ó=ó ótóiómóeó.ótóiómóeó(ó)óó
-ó ó ó ó ó ó ó ó ó ó ó ó ólóaótóeónócóióaó_ómósó ó=ó óiónótó(ó(óeónódó_ótóiómóeó ó-ó ósótóaórótó_ótóiómóeó)ó ó*ó ó1ó0ó0ó0ó)óó
-ó ó ó ó ó ó ó ó ó ó ó ó óó
-ó ó ó ó ó ó ó ó ó ó ó ó ócóoónótóeónótó ó=ó óróeósópóoónósóeó.ócóhóoóiócóeósó[ó0ó]ó.ómóeósósóaógóeó.ócóoónótóeónótóó
-ó ó ó ó ó ó ó ó ó ó ó ó ótóoókóeónósó_óiónópóuótó ó=ó óróeósópóoónósóeó.óuósóaógóeó.ópóróoómópótó_ótóoókóeónósóó
-ó ó ó ó ó ó ó ó ó ó ó ó ótóoókóeónósó_óoóuótópóuótó ó=ó óróeósópóoónósóeó.óuósóaógóeó.ócóoómópólóeótóióoónó_ótóoókóeónósóó
-ó ó ó ó ó ó ó ó ó ó ó ó óó
-ó ó ó ó ó ó ó ó ó ó ó ó óróeósóuólótó ó=ó ó{óó
-ó ó ó ó ó ó ó ó ó ó ó ó ó ó ó ó ó"ósóuócócóeósósó"ó:ó óTóróuóeó,óó
-ó ó ó ó ó ó ó ó ó ó ó ó ó ó ó ó ó"ócóoónótóeónótó"ó:ó ócóoónótóeónótó,óó
-ó ó ó ó ó ó ó ó ó ó ó ó ó ó ó ó ó"ómóoódóeóló_óuósóeódó"ó:ó ómóoódóeóló,óó
-ó ó ó ó ó ó ó ó ó ó ó ó ó ó ó ó ó"ótóoókóeónósó_óiónópóuótó"ó:ó ótóoókóeónósó_óiónópóuótó,óó
-ó ó ó ó ó ó ó ó ó ó ó ó ó ó ó ó ó"ótóoókóeónósó_óoóuótópóuótó"ó:ó ótóoókóeónósó_óoóuótópóuótó,óó
-ó ó ó ó ó ó ó ó ó ó ó ó ó ó ó ó ó"ólóaótóeónócóióaó_ómósó"ó:ó ólóaótóeónócóióaó_ómósóó
-ó ó ó ó ó ó ó ó ó ó ó ó ó}óó
-ó ó ó ó ó ó ó ó ó ó ó ó óó
-ó ó ó ó ó ó ó ó ó ó ó ó ó#ó óLóoógógóiónógó ópóaóróaó óaónóaólóyótóiócósó óyó ódóeóbóuógógóiónógóó
-ó ó ó ó ó ó ó ó ó ó ó ó óiófó ólóoógó_óeóxóeócóuótóióoónó:óó
-ó ó ó ó ó ó ó ó ó ó ó ó ó ó ó ó ósóaóvóeó_óaógóeónótó_ólóoógó(óó
-ó ó ó ó ó ó ó ó ó ó ó ó ó ó ó ó ó ó ó ó óaógóeónótóeó=óaógóeónótó_ónóaómóeó,óó
-ó ó ó ó ó ó ó ó ó ó ó ó ó ó ó ó ó ó ó ó óaócócóióoónó=ó"ócóhóaótó_ócóoómópólóeótóióoónó"ó,óó
-ó ó ó ó ó ó ó ó ó ó ó ó ó ó ó ó ó ó ó ó óiónópóuótó_ódóaótóaó=ó{óó
-ó ó ó ó ó ó ó ó ó ó ó ó ó ó ó ó ó ó ó ó ó ó ó ó ó"ómóeósósóaógóeósó"ó:ó ómóeósósóaógóeósó,óó
-ó ó ó ó ó ó ó ó ó ó ó ó ó ó ó ó ó ó ó ó ó ó ó ó ó"ótóeómópóeóróaótóuóróeó"ó:ó ótóeómópóeóróaótóuóróeó,óó
-ó ó ó ó ó ó ó ó ó ó ó ó ó ó ó ó ó ó ó ó ó ó ó ó ó"ómóaóxó_ótóoókóeónósó"ó:ó ómóaóxó_ótóoókóeónósóó
-ó ó ó ó ó ó ó ó ó ó ó ó ó ó ó ó ó ó ó ó ó}ó,óó
-ó ó ó ó ó ó ó ó ó ó ó ó ó ó ó ó ó ó ó ó óoóuótópóuótó_ódóaótóaó=ó{ó"ócóoónótóeónótó"ó:ó ócóoónótóeónótó}ó,óó
-ó ó ó ó ó ó ó ó ó ó ó ó ó ó ó ó ó ó ó ó ómóoódóeóló_óuósóeódó=ómóoódóeóló,óó
-ó ó ó ó ó ó ó ó ó ó ó ó ó ó ó ó ó ó ó ó ótóoókóeónósó_óiónópóuótó=ótóoókóeónósó_óiónópóuótó,óó
-ó ó ó ó ó ó ó ó ó ó ó ó ó ó ó ó ó ó ó ó ótóoókóeónósó_óoóuótópóuótó=ótóoókóeónósó_óoóuótópóuótó,óó
-ó ó ó ó ó ó ó ó ó ó ó ó ó ó ó ó ó ó ó ó ólóaótóeónócóióaó_ómósó=ólóaótóeónócóióaó_ómósó,óó
-ó ó ó ó ó ó ó ó ó ó ó ó ó ó ó ó ó ó ó ó ósóuócócóeósósó=óTóróuóeó,óó
-ó ó ó ó ó ó ó ó ó ó ó ó ó ó ó ó ó ó ó ó ólóeóaódó_óiódó=ólóeóaódó_óiódó,óó
-ó ó ó ó ó ó ó ó ó ó ó ó ó ó ó ó ó ó ó ó ósóeósósóióoónó_óiódó=ósóeósósóióoónó_óiódóó
-ó ó ó ó ó ó ó ó ó ó ó ó ó ó ó ó ó)óó
-ó ó ó ó ó ó ó ó ó ó ó ó óó
-ó ó ó ó ó ó ó ó ó ó ó ó óróeótóuórónó óróeósóuólótóó
-ó ó ó ó ó ó ó ó ó ó ó ó óó
-ó ó ó ó ó ó ó ó óeóxócóeópótó óEóxócóeópótóióoónó óaósó óeó:óó
-ó ó ó ó ó ó ó ó ó ó ó ó óeónódó_ótóiómóeó ó=ó ótóiómóeó.ótóiómóeó(ó)óó
-ó ó ó ó ó ó ó ó ó ó ó ó ólóaótóeónócóióaó_ómósó ó=ó óiónótó(ó(óeónódó_ótóiómóeó ó-ó ósótóaórótó_ótóiómóeó)ó ó*ó ó1ó0ó0ó0ó)óó
-ó ó ó ó ó ó ó ó ó ó ó ó óeóróróoóró_ómósógó ó=ó ósótóró(óeó)óó
-ó ó ó ó ó ó ó ó ó ó ó ó óó
-ó ó ó ó ó ó ó ó ó ó ó ó óróeósóuólótó ó=ó ó{óó
-ó ó ó ó ó ó ó ó ó ó ó ó ó ó ó ó ó"ósóuócócóeósósó"ó:ó óFóaólósóeó,óó
-ó ó ó ó ó ó ó ó ó ó ó ó ó ó ó ó ó"ócóoónótóeónótó"ó:ó ó"ó"ó,óó
-ó ó ó ó ó ó ó ó ó ó ó ó ó ó ó ó ó"ómóoódóeóló_óuósóeódó"ó:ó ómóoódóeóló,óó
-ó ó ó ó ó ó ó ó ó ó ó ó ó ó ó ó ó"ótóoókóeónósó_óiónópóuótó"ó:ó ó0ó,óó
-ó ó ó ó ó ó ó ó ó ó ó ó ó ó ó ó ó"ótóoókóeónósó_óoóuótópóuótó"ó:ó ó0ó,óó
-ó ó ó ó ó ó ó ó ó ó ó ó ó ó ó ó ó"ólóaótóeónócóióaó_ómósó"ó:ó ólóaótóeónócóióaó_ómósó,óó
-ó ó ó ó ó ó ó ó ó ó ó ó ó ó ó ó ó"óeóróróoóró"ó:ó óeóróróoóró_ómósógóó
-ó ó ó ó ó ó ó ó ó ó ó ó ó}óó
-ó ó ó ó ó ó ó ó ó ó ó ó óó
-ó ó ó ó ó ó ó ó ó ó ó ó óiófó ólóoógó_óeóxóeócóuótóióoónó:óó
-ó ó ó ó ó ó ó ó ó ó ó ó ó ó ó ó ósóaóvóeó_óaógóeónótó_ólóoógó(óó
-ó ó ó ó ó ó ó ó ó ó ó ó ó ó ó ó ó ó ó ó óaógóeónótóeó=óaógóeónótó_ónóaómóeó,óó
-ó ó ó ó ó ó ó ó ó ó ó ó ó ó ó ó ó ó ó ó óaócócóióoónó=ó"ócóhóaótó_ócóoómópólóeótóióoónó"ó,óó
-ó ó ó ó ó ó ó ó ó ó ó ó ó ó ó ó ó ó ó ó óiónópóuótó_ódóaótóaó=ó{ó"ómóeósósóaógóeósó"ó:ó ómóeósósóaógóeósó}ó,óó
-ó ó ó ó ó ó ó ó ó ó ó ó ó ó ó ó ó ó ó ó óoóuótópóuótó_ódóaótóaó=ó{ó}ó,óó
-ó ó ó ó ó ó ó ó ó ó ó ó ó ó ó ó ó ó ó ó ómóoódóeóló_óuósóeódó=ómóoódóeóló,óó
-ó ó ó ó ó ó ó ó ó ó ó ó ó ó ó ó ó ó ó ó ólóaótóeónócóióaó_ómósó=ólóaótóeónócóióaó_ómósó,óó
-ó ó ó ó ó ó ó ó ó ó ó ó ó ó ó ó ó ó ó ó óeóróróoóró_ómóeósósóaógóeó=óeóróróoóró_ómósógó,óó
-ó ó ó ó ó ó ó ó ó ó ó ó ó ó ó ó ó ó ó ó ósóuócócóeósósó=óFóaólósóeó,óó
-ó ó ó ó ó ó ó ó ó ó ó ó ó ó ó ó ó ó ó ó ólóeóaódó_óiódó=ólóeóaódó_óiódó,óó
-ó ó ó ó ó ó ó ó ó ó ó ó ó ó ó ó ó ó ó ó ósóeósósóióoónó_óiódó=ósóeósósóióoónó_óiódóó
-ó ó ó ó ó ó ó ó ó ó ó ó ó ó ó ó ó)óó
-ó ó ó ó ó ó ó ó ó ó ó ó óó
-ó ó ó ó ó ó ó ó ó ó ó ó óróeótóuórónó óróeósóuólótóó
-ó ó ó ó óó
-ó ó ó ó ódóeófó ógóeótó_óaógóeónótó_ósótóaótósó(ósóeólófó,ó óaógóeónótó_ónóaómóeó:ó ósótóró)ó ó-ó>ó óDóiócótó[ósótóró,ó óAónóyó]ó:óó
-ó ó ó ó ó ó ó ó ó"ó"ó"óó
-ó ó ó ó ó ó ó ó óOóbótóióeónóeó óeósótóaódó├ó¡ósótóiócóaósó ódóeó óuósóoó ódóeó óuónó óaógóeónótóeó óeósópóeócó├ó¡ófóiócóoó.óó
-ó ó ó ó ó ó ó ó ó├óÜótóióló ópóaóróaó óeóló ódóaósóhóbóoóaóródó ódóeó óaónóaólóyótóiócósó.óó
-ó ó ó ó ó ó ó ó ó"ó"ó"óó
-ó ó ó ó ó ó ó ó ófóróoómó ódóaótóaóbóaósóeó óiómópóoórótó ógóeótó_ódóbóó
-ó ó ó ó ó ó ó ó óó
-ó ó ó ó ó ó ó ó ódóbó ó=ó ógóeótó_ódóbó(ó)óó
-ó ó ó ó ó ó ó ó óó
-ó ó ó ó ó ó ó ó ó#ó óTóoótóaóló ódóeó óeójóeócóuócóióoónóeósóó
-ó ó ó ó ó ó ó ó ótóoótóaóló_óróeósóuólótó ó=ó ódóbó.ótóaóbólóeó(ó"óaógóeónótó_ólóoógósó"ó)ó.ósóeólóeócótó(óó
-ó ó ó ó ó ó ó ó ó ó ó ó ó"óiódó"ó,ó ócóoóuónótó=ó"óeóxóaócótó"óó
-ó ó ó ó ó ó ó ó ó)ó.óeóqó(ó"óaógóeónótóeó"ó,ó óaógóeónótó_ónóaómóeó)ó.óeóxóeócóuótóeó(ó)óó
-ó ó ó ó ó ó ó ó óó
-ó ó ó ó ó ó ó ó ótóoótóaóló_óeójóeócóuócóióoónóeósó ó=ó ótóoótóaóló_óróeósóuólótó.ócóoóuónótó óoóró ó0óó
-ó ó ó ó ó ó ó ó óó
-ó ó ó ó ó ó ó ó óiófó ótóoótóaóló_óeójóeócóuócóióoónóeósó ó=ó=ó ó0ó:óó
-ó ó ó ó ó ó ó ó ó ó ó ó óróeótóuórónó ó{óó
-ó ó ó ó ó ó ó ó ó ó ó ó ó ó ó ó ó"óaógóeónótóeó"ó:ó óaógóeónótó_ónóaómóeó,óó
-ó ó ó ó ó ó ó ó ó ó ó ó ó ó ó ó ó"ómóoódóeólóoó"ó:ó ósóeólófó.ógóeótó_ómóoódóeóló_ófóoóró_óaógóeónótó(óaógóeónótó_ónóaómóeó)ó,óó
-ó ó ó ó ó ó ó ó ó ó ó ó ó ó ó ó ó"ótóoótóaóló_óeójóeócóuócóióoónóeósó"ó:ó ó0ó,óó
-ó ó ó ó ó ó ó ó ó ó ó ó ó ó ó ó ó"ótóaósóaó_óeóxóiótóoó"ó:ó ó0ó.ó0ó,óó
-ó ó ó ó ó ó ó ó ó ó ó ó ó ó ó ó ó"ópóróoómóeódóióoó_ólóaótóeónócóióaó_ómósó"ó:ó ó0ó,óó
-ó ó ó ó ó ó ó ó ó ó ó ó ó ó ó ó ó"ótóoótóaóló_ótóoókóeónósó_óiónópóuótó"ó:ó ó0ó,óó
-ó ó ó ó ó ó ó ó ó ó ó ó ó ó ó ó ó"ótóoótóaóló_ótóoókóeónósó_óoóuótópóuótó"ó:ó ó0óó
-ó ó ó ó ó ó ó ó ó ó ó ó ó}óó
-ó ó ó ó ó ó ó ó óó
-ó ó ó ó ó ó ó ó ó#ó óEósótóaódó├ó¡ósótóiócóaósó ódóeótóaólólóaódóaósóó
-ó ó ó ó ó ó ó ó ósótóaótósó_óróeósóuólótó ó=ó ódóbó.ótóaóbólóeó(ó"óaógóeónótó_ólóoógósó"ó)ó.ósóeólóeócótó(óó
-ó ó ó ó ó ó ó ó ó ó ó ó ó"ósóuócócóeósósó,ólóaótóeónócóióaó_ómósó,ótóoókóeónósó_óiónópóuótó,ótóoókóeónósó_óoóuótópóuótó"óó
-ó ó ó ó ó ó ó ó ó)ó.óeóqó(ó"óaógóeónótóeó"ó,ó óaógóeónótó_ónóaómóeó)ó.óeóxóeócóuótóeó(ó)óó
-ó ó ó ó ó ó ó ó óó
-ó ó ó ó ó ó ó ó ósótóaótósó_ódóaótóaó ó=ó ósótóaótósó_óróeósóuólótó.ódóaótóaó óoóró ó[ó]óó
-ó ó ó ó ó ó ó ó óó
-ó ó ó ó ó ó ó ó óeóxóiótóoósóoósó ó=ó ósóuómó(ó1ó ófóoóró ósó óiónó ósótóaótósó_ódóaótóaó óiófó ósó.ógóeótó(ó"ósóuócócóeósósó"ó,ó óTóróuóeó)ó)óó
-ó ó ó ó ó ó ó ó ólóaótóeónócóióaósó ó=ó ó[ósó.ógóeótó(ó"ólóaótóeónócóióaó_ómósó"ó,ó ó0ó)ó ófóoóró ósó óiónó ósótóaótósó_ódóaótóaó óiófó ósó.ógóeótó(ó"ólóaótóeónócóióaó_ómósó"ó)ó]óó
-ó ó ó ó ó ó ó ó ótóoókóeónósó_óiónó ó=ó ósóuómó(ósó.ógóeótó(ó"ótóoókóeónósó_óiónópóuótó"ó,ó ó0ó)ó ófóoóró ósó óiónó ósótóaótósó_ódóaótóaó)óó
-ó ó ó ó ó ó ó ó ótóoókóeónósó_óoóuótó ó=ó ósóuómó(ósó.ógóeótó(ó"ótóoókóeónósó_óoóuótópóuótó"ó,ó ó0ó)ó ófóoóró ósó óiónó ósótóaótósó_ódóaótóaó)óó
-ó ó ó ó ó ó ó ó óó
-ó ó ó ó ó ó ó ó ópóróoómóeódóióoó_ólóaótóeónócóióaó ó=ó ósóuómó(ólóaótóeónócóióaósó)ó ó/ó ólóeónó(ólóaótóeónócóióaósó)ó óiófó ólóaótóeónócóióaósó óeólósóeó ó0óó
-ó ó ó ó ó ó ó ó ótóaósóaó_óeóxóiótóoó ó=ó óeóxóiótóoósóoósó ó/ó ótóoótóaóló_óeójóeócóuócóióoónóeósó óiófó ótóoótóaóló_óeójóeócóuócóióoónóeósó ó>ó ó0ó óeólósóeó ó0óó
-ó ó ó ó ó ó ó ó óó
-ó ó ó ó ó ó ó ó óróeótóuórónó ó{óó
-ó ó ó ó ó ó ó ó ó ó ó ó ó"óaógóeónótóeó"ó:ó óaógóeónótó_ónóaómóeó,óó
-ó ó ó ó ó ó ó ó ó ó ó ó ó"ómóoódóeólóoó"ó:ó ósóeólófó.ógóeótó_ómóoódóeóló_ófóoóró_óaógóeónótó(óaógóeónótó_ónóaómóeó)ó,óó
-ó ó ó ó ó ó ó ó ó ó ó ó ó"ótóoótóaóló_óeójóeócóuócóióoónóeósó"ó:ó ótóoótóaóló_óeójóeócóuócóióoónóeósó,óó
-ó ó ó ó ó ó ó ó ó ó ó ó ó"ótóaósóaó_óeóxóiótóoó"ó:ó óróoóuónódó(ótóaósóaó_óeóxóiótóoó,ó ó3ó)ó,óó
-ó ó ó ó ó ó ó ó ó ó ó ó ó"ópóróoómóeódóióoó_ólóaótóeónócóióaó_ómósó"ó:ó óróoóuónódó(ópóróoómóeódóióoó_ólóaótóeónócóióaó,ó ó2ó)ó,óó
-ó ó ó ó ó ó ó ó ó ó ó ó ó"ótóoótóaóló_ótóoókóeónósó_óiónópóuótó"ó:ó ótóoókóeónósó_óiónó,óó
-ó ó ó ó ó ó ó ó ó ó ó ó ó"ótóoótóaóló_ótóoókóeónósó_óoóuótópóuótó"ó:ó ótóoókóeónósó_óoóuótóó
-ó ó ó ó ó ó ó ó ó}óó
-óó
-óó
-ó#ó óIónósótóaónócóióaó ógólóoóbóaólóó
-ó_ógóróoóqó_ócólóióeónótó ó=ó óNóoónóeóó
-óó
-óó
-ódóeófó ógóeótó_ógóróoóqó_ócólóióeónótó(ó)ó ó-ó>ó óGóróoóqóCólóióeónótó:óó
-ó ó ó ó ó"ó"ó"óSóiónógólóeótóoónó ópóaóróaó óeóló ócólóióeónótóeó ódóeó óGóróoóqó.ó"ó"ó"óó
-ó ó ó ó ógólóoóbóaóló ó_ógóróoóqó_ócólóióeónótóó
-ó ó ó ó óiófó ó_ógóróoóqó_ócólóióeónótó óiósó óNóoónóeó:óó
-ó ó ó ó ó ó ó ó ó_ógóróoóqó_ócólóióeónótó ó=ó óGóróoóqóCólóióeónótó(ó)óó
-ó ó ó ó óróeótóuórónó ó_ógóróoóqó_ócólóióeónótóó
-ó
+# Cliente para Groq API
+# [CRITERIO 3] — Uso real de IA con modelos de Groq
+
+import groq
+from typing import Dict, Any, List, Optional
+from config import get_settings
+
+class GroqClient:
+    """
+    Cliente para interactuar con Groq API.
+    Maneja diferentes modelos para diferentes agentes según las especificaciones.
+    """
+    
+    def __init__(self):
+        settings = get_settings()
+        self.client = groq.Groq(api_key=settings.groq_api_key)
+        self.models = {
+            "orchestrator": "llama-3.3-70b-versatile",
+            "captador": "gemma2-9b-it", 
+            "conversacional": "mixtral-8x7b-32768",
+            "identidad": "llama-3.1-8b-instant",
+            "analitico": "llama-3.3-70b-versatile"
+        }
+        
+    def get_model_for_agent(self, agent_type: str) -> str:
+        """Obtiene el modelo apropiado para cada tipo de agente."""
+        return self.models.get(agent_type, "llama-3.1-8b-instant")
+    
+    async def generate_completion(
+        self, 
+        prompt: str, 
+        agent_type: str = "conversacional",
+        max_tokens: int = 1000,
+        temperature: float = 0.7,
+        system_message: Optional[str] = None
+    ) -> str:
+        """
+        Genera una respuesta usando Groq API.
+        
+        Args:
+            prompt: El prompt del usuario
+            agent_type: Tipo de agente para seleccionar el modelo
+            max_tokens: Máximo número de tokens en la respuesta
+            temperature: Creatividad de la respuesta (0.0-2.0)
+            system_message: Mensaje del sistema opcional
+            
+        Returns:
+            Respuesta generada por el modelo
+        """
+        model = self.get_model_for_agent(agent_type)
+        
+        messages = []
+        if system_message:
+            messages.append({
+                "role": "system",
+                "content": system_message
+            })
+        
+        messages.append({
+            "role": "user", 
+            "content": prompt
+        })
+        
+        try:
+            response = self.client.chat.completions.create(
+                model=model,
+                messages=messages,
+                max_tokens=max_tokens,
+                temperature=temperature
+            )
+            
+            return response.choices[0].message.content
+            
+        except Exception as e:
+            print(f"❌ Error en Groq API: {e}")
+            return "Lo siento, hay un problema técnico. Por favor intenta de nuevo."
+
+# Instancia global del cliente
+_groq_client: Optional[GroqClient] = None
+
+def get_groq_client() -> GroqClient:
+    """Obtiene instancia global del cliente Groq."""
+    global _groq_client
+    if _groq_client is None:
+        _groq_client = GroqClient()
+    return _groq_client
+
+# Funciones de conveniencia para usar en los agentes
+async def generate_agent_response(
+    prompt: str,
+    agent_type: str,
+    system_message: str = None,
+    **kwargs
+) -> str:
+    """Función de conveniencia para generar respuestas de agentes."""
+    client = get_groq_client()
+    return await client.generate_completion(
+        prompt=prompt,
+        agent_type=agent_type, 
+        system_message=system_message,
+        **kwargs
+    )
