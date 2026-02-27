@@ -98,64 +98,59 @@ class BaseAgent(ABC):
             # Agregar mensaje actual
             messages.append({"role": "user", "content": user_message})
             
+            # Construir el system message con el contexto si existe
+            system_msg = self.system_prompt
+            if conversation_history:
+                system_msg += f"\n\nContexto de conversación previa:\n{conversation_history}"
+            
             # Llamada a Groq API
-            response = await self.groq_client.chat_completion(
-                messages=messages,
-                model=self.model,
+            agent_response = await self.groq_client.generate_completion(
+                prompt=user_message,
+                agent_type=self.agent_name,
+                system_message=system_msg,
                 temperature=0.7,
                 max_tokens=1000
             )
             
-            if response and response.get("success"):
-                agent_response = response["content"]
-                
-                # Calcular tiempo de procesamiento
-                processing_time = (datetime.utcnow() - start_time).total_seconds() * 1000
-                
-                # Guardar en memoria
-                await self.memory_manager.save_message(
-                    session_id=session_id,
-                    role="user",
-                    content=user_message
-                )
-                
-                await self.memory_manager.save_message(
-                    session_id=session_id,
-                    role="assistant",
-                    content=agent_response,
-                    agente=self.agent_name
-                )
-                
-                # Log de actividad
-                await log_agent_action(
-                    agent_name=self.agent_name,
-                    action="generate_response",
-                    session_id=session_id,
-                    details={
-                        "message_length": len(user_message),
-                        "response_length": len(agent_response),
-                        "model_used": self.model,
-                        "processing_time_ms": processing_time
-                    }
-                )
-                
-                return {
-                    "success": True,
-                    "response": agent_response,
-                    "agent": self.agent_name,
-                    "session_id": session_id,
-                    "processing_time_ms": processing_time,
+            # Calcular tiempo de procesamiento
+            processing_time = (datetime.utcnow() - start_time).total_seconds() * 1000
+            
+            # Guardar en memoria
+            await self.memory_manager.save_message(
+                session_id=session_id,
+                message=user_message,
+                message_type="user"
+            )
+            
+            await self.memory_manager.save_message(
+                session_id=session_id,
+                message=agent_response,
+                message_type="assistant",
+                agent_name=self.agent_name
+            )
+            
+            # Log de actividad
+            await log_agent_action(
+                agent_name=self.agent_name,
+                action="generate_response",
+                session_id=session_id,
+                details={
+                    "message_length": len(user_message),
+                    "response_length": len(agent_response),
                     "model_used": self.model,
-                    "timestamp": datetime.utcnow().isoformat()
+                    "processing_time_ms": processing_time
                 }
-            else:
-                error_msg = response.get("error", "Error desconocido en Groq API")
-                await self._handle_error("groq_api_error", error_msg, session_id)
-                return {
-                    "success": False,
-                    "error": error_msg,
-                    "agent": self.agent_name
-                }
+            )
+            
+            return {
+                "success": True,
+                "response": agent_response,
+                "agent": self.agent_name,
+                "session_id": session_id,
+                "processing_time_ms": processing_time,
+                "model_used": self.model,
+                "timestamp": datetime.utcnow().isoformat()
+            }
                 
         except Exception as e:
             await self._handle_error("processing_error", str(e), session_id)

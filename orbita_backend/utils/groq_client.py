@@ -13,7 +13,7 @@ class GroqClient:
     
     def __init__(self):
         settings = get_settings()
-        self.client = groq.Groq(api_key=settings.groq_api_key)
+        self.client = groq.Groq(api_key=settings["groq_api_key"])
         self.models = {
             "orchestrator": "llama-3.3-70b-versatile",
             "captador": "gemma2-9b-it", 

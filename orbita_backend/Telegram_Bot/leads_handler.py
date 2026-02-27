@@ -324,9 +324,9 @@ class LeadsBotHandler:
                 ),
                 parse_mode=ParseMode.MARKDOWN
             )
-            # Actualizar estado
+            # Actualizar status
             self.db.table("leads").update(
-                {"etapa_funnel": "accion", "estado": "cotizado"}
+                {"status": "cotizado"}
             ).eq("id", lead_id).execute()
             
         else:  # rechazar
@@ -428,10 +428,10 @@ class LeadsBotHandler:
             # Buscar lead existente
             result = self.db.table("leads").select("*").eq(
                 "telegram_chat_id", chat_id
-            ).maybe_single().execute()
+            ).execute()
             
-            if result.data:
-                return result.data
+            if result.data and len(result.data) > 0:
+                return result.data[0]
             
             # Crear nuevo lead
             nombre = user.first_name
@@ -440,15 +440,17 @@ class LeadsBotHandler:
             
             username = user.username or f"user_{chat_id[:8]}"
             
+            # Generar email temporal único para evitar conflicts
+            temp_email = f"telegram_{chat_id}@temp.orbita.local"
+            
             nuevo_lead = {
                 "nombre": nombre,
+                "email": temp_email,  # Email temporal único
                 "telegram_chat_id": chat_id,
                 "telegram_username": username,
-                "fuente": "telegram",
-                "estado": "nuevo",
-                "etapa_funnel": "atencion",
-                "prioridad": "media",
-                "created_at": datetime.now(timezone.utc).isoformat()
+                "origen": "telegram",
+                "status": "nuevo",
+                "interes": "inicial"
             }
             
             result = self.db.table("leads").insert(nuevo_lead).execute()
@@ -468,16 +470,46 @@ class LeadsBotHandler:
         content_type: str = "text",
         agente: str = None
     ):
-        """Guarda un mensaje en la tabla conversations."""
+        """Guarda un mensaje en el historial de la conversación."""
         try:
-            self.db.table("conversations").insert({
-                "lead_id": lead_id,
+            # Buscar conversación activa o crear una nueva
+            result = self.db.table("conversations").select("*").eq(
+                "lead_id", lead_id
+            ).eq("estado", "en_progreso").execute()
+            
+            mensaje_nuevo = {
                 "role": role,
                 "content": content,
                 "content_type": content_type,
                 "agente": agente,
-                "created_at": datetime.now(timezone.utc).isoformat()
-            }).execute()
+                "timestamp": datetime.now(timezone.utc).isoformat()
+            }
+            
+            if result.data and len(result.data) > 0:
+                # Actualizar conversación existente
+                conversation = result.data[0]
+                historial = conversation.get("historial", []) or []
+                historial.append(mensaje_nuevo)
+                
+                # Actualizar agentes intervenidos
+                agentes_intervenidos = conversation.get("agentes_intervenidos", []) or []
+                if agente and agente not in agentes_intervenidos:
+                    agentes_intervenidos.append(agente)
+                
+                self.db.table("conversations").update({
+                    "historial": historial,
+                    "agentes_intervenidos": agentes_intervenidos
+                }).eq("id", conversation["id"]).execute()
+            else:
+                # Crear nueva conversación
+                self.db.table("conversations").insert({
+                    "lead_id": lead_id,
+                    "session_id": lead_id,
+                    "tipo_comunicacion": "telegram",
+                    "historial": [mensaje_nuevo],
+                    "agentes_intervenidos": [agente] if agente else [],
+                    "estado": "en_progreso"
+                }).execute()
         except Exception as e:
             print(f"❌ Error guardando mensaje: {e}")
     
@@ -485,12 +517,15 @@ class LeadsBotHandler:
         """Obtiene el historial de conversación."""
         try:
             result = self.db.table("conversations").select(
-                "role, content, content_type, agente, created_at"
-            ).eq("lead_id", lead_id).order(
-                "created_at", desc=False
-            ).limit(20).execute()
+                "historial"
+            ).eq("lead_id", lead_id).eq(
+                "estado", "en_progreso"
+            ).order("created_at", desc=True).limit(1).execute()
             
-            return result.data or []
+            if result.data and len(result.data) > 0:
+                historial = result.data[0].get("historial", [])
+                return historial[-20:] if historial else []  # Últimos 20 mensajes
+            return []
         except Exception as e:
             print(f"❌ Error obteniendo contexto: {e}")
             return []
@@ -500,12 +535,13 @@ class LeadsBotHandler:
         try:
             result = self.db.table("telegram_bot_sessions").select(
                 "estado_bot"
-            ).eq("telegram_chat_id", chat_id).maybe_single().execute()
+            ).eq("telegram_chat_id", chat_id).execute()
             
-            if result.data:
-                return result.data.get("estado_bot") == "pausado"
+            if result.data and len(result.data) > 0:
+                return result.data[0].get("estado_bot") == "pausado"
             return False
-        except:
+        except Exception as e:
+            print(f"⚠️ Error verificando estado pausado: {e}")
             return False
     
     # ─── BOTONES INTELIGENTES ──────────────────────────────────

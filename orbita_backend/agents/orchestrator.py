@@ -16,6 +16,11 @@ class OrchestratorAgent(BaseAgent):
         model = GROQ_MODELS.get("orchestrator", "llama-3.3-70b-versatile")
         super().__init__(agent_name="orchestrator", model=model)
         
+        # System prompt para el orquestador
+        self.system_prompt = """Eres el Orquestador del sistema ORBITA, especializado en analizar consultas y coordinar respuestas.
+Tu rol es comprender la intención del usuario y generar respuestas apropiadas o decidir qué agente debe manejar la consulta.
+Sé conversacional, amable y profesional."""
+        
         # Registro de agentes disponibles
         self.available_agents = {
             "captador": "Especialista en captura y calificación de leads",
